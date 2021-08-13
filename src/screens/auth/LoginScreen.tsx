@@ -1,22 +1,53 @@
 import * as React from 'react';
 import { connect } from 'react-redux'
-import { IUser, setUser, updateUserLoading } from '../../redux/user/user.action';
+import { IUser, setUser, setUserToken, updateUserLoading } from '../../redux/user/user.action';
 import { Button } from 'react-native-elements/dist/buttons/Button';
 import {
     View, KeyboardAvoidingView,
     TextInput, StyleSheet, Text, Platform,
-    TouchableWithoutFeedback, Keyboard, Image
+    TouchableWithoutFeedback, Keyboard, Image, ActivityIndicator
 } from 'react-native';
-import { Header } from 'react-native-elements';
+import { Header, Overlay } from 'react-native-elements';
 import { colors } from './../../utils/theam.json';
+import { login } from '../../services/user/user.service';
+import { useNavigation } from '@react-navigation/native';
 
-const LoginScreen = ({ userState }: any) => {
-    const [text, onChangeText] = React.useState("Useless Text");
-    const [number, onChangeNumber] = React.useState(null);
-    const [emailError, setEmailError] = React.useState('Email error');
+const LoginScreen = ({ userState, navigation, setUsers, setToken}: any) => {
+    const [email, onChangeEmail] = React.useState("");
+    const [password, onChangePassword] = React.useState('');
+    const [emailError, setEmailError] = React.useState('');
     const [PasswordError, setPasswordError] = React.useState('');
+    const [loading, setLoading] = React.useState(false);
+    // const navigation = useNavigation();
 
+    const onLoginPress = async () => {
+        if (email.length > 0 && password.length > 0) {
+            setLoading(true);
+            try {
+                const data = await login({ email, password });
+                console.log((data.data.data.user).toJson());
+                setLoading(false);
+                // setToken(data.data.data.token);
+                // const user: IUser = {
+                //     username: data.data.data.data.user.username,
+                //     email: data.data.data.data.user.username,
+                // }
+                // setUsers(user)
+                navigation.navigate('Home');
+            } catch (error) {
+                if (error.response?.data?.message) {
+                    if ((error.response.data.message).search('Email') !== -1) {
+                        setEmailError(error.response.data.message);
+                    }
+                    if ((error.response.data.message).search('Password') !== -1) {
+                        setPasswordError(error.response.data.message);
+                    }
+                }
+                setLoading(false);
 
+            }
+        }
+    }
 
     return (
 
@@ -32,21 +63,25 @@ const LoginScreen = ({ userState }: any) => {
             />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.inner}>
+                    {loading && <Overlay isVisible={loading} >
+                        <ActivityIndicator size="large" color={colors.main_color} />
+                    </Overlay>}
                     <View style={styles.textInputScope}>
                         <Text style={styles.label}>Email</Text>
                         <TextInput placeholder="Email" keyboardType="email-address"
-                            onChangeText={onChangeText}
-                            value={text} style={styles.textInput} />
+                            onChangeText={onChangeEmail}
+                            value={email} style={styles.textInput} />
                         {emailError.length > 0 && <Text style={styles.errormessage}>{emailError}</Text>}
                     </View>
                     <View style={styles.textInputScope}>
                         <Text style={styles.label}>Password</Text>
-                        <TextInput placeholder="Password" style={styles.textInput} secureTextEntry={true} inlineImageLeft="google" />
-                        {PasswordError.length > 0 && <Text  style={styles.errormessage} >{PasswordError}</Text>}
+                        <TextInput onChangeText={onChangePassword}
+                            value={password} placeholder="Password" style={styles.textInput} secureTextEntry={true} inlineImageLeft="google" />
+                        {PasswordError.length > 0 && <Text style={styles.errormessage} >{PasswordError}</Text>}
                     </View>
 
                     <View style={styles.btnContainer}>
-                        <Button title="Login" onPress={() => null} />
+                        <Button title="Login" onPress={() => onLoginPress()} />
                     </View>
                     <View style={{ flexDirection: 'row', marginTop: 25, alignSelf: 'center' }}>
                         <Text style={{ color: colors.main_color }}>Or Login with
@@ -82,17 +117,19 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         borderRadius: 12,
-        borderColor: '#1BB55C',
-        color: '#1BB55C',
+        borderColor: colors.main_color,
+        color: colors.main_color,
         fontFamily: 'Cochin',
         fontSize: 16
     },
     btnContainer: {
-        backgroundColor: '#1BB55C',
+        backgroundColor: colors.main_color,
         marginTop: 12,
-        borderRadius: 20,
-        width: '70%',
-        alignSelf: 'center'
+        borderRadius: 50,
+        width: '50%',
+        alignSelf: 'center',
+        paddingTop: 5,
+        paddingBottom: 5
     },
     label: {
         fontSize: 11,
@@ -111,18 +148,21 @@ const styles = StyleSheet.create({
     }
 });
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: any) => ({
     userState: state.user
 })
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch: any) => ({
     updateLoading: (loading: boolean) => {
         dispatch(updateUserLoading(loading));
         // console.log('called');
     },
     setUsers: (user: IUser) => {
-        dispatch(setUser(user));
-        // console.log('user',user);
+        // dispatch(setUser(user));
+        console.log('user',user);
+    },
+    setToken: (token: string) => {
+        dispatch(setUserToken(token));
     }
 })
 

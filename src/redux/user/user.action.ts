@@ -5,9 +5,8 @@ export enum UserActionTypes {
     'UPDATE_USER_LOADING'= 'UPDATE_USER_LOADING'
 }
 export interface IUser{
-    name: string,
-    email: string,
-    age: number
+    username: string,
+    email: string
 }
 
 export const setUser = (user: IUser)=>({
