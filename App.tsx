@@ -18,6 +18,9 @@ import { setUser } from './src/redux/user/user.action';
 import { createStore } from '@reduxjs/toolkit';
 import reducers from './src/redux/index'
 import LoginScreen from './src/screens/auth/LoginScreen';
+import RegisterScreen from './src/screens/auth/RegisterScreen';
+import AddExamScreen from './src/screens/exam/AddExamScreen';
+import AllExamScreen from './src/screens/exam/AllExamScreen';
 
 function DetailsScreen({ navigation }) {
   return (
@@ -40,6 +43,9 @@ function App() {
             headerShown: false
           }}>
           <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="AllExam" component={AllExamScreen} />
+          <Stack.Screen name="AddExam" component={AddExamScreen} />
+          <Stack.Screen name="SignUp" component={RegisterScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Details" component={DetailsScreen} />
         </Stack.Navigator>

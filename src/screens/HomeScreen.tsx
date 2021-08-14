@@ -12,7 +12,7 @@ const HomeScreen = ({ navigation, updateLoading, userState, setUsers }) => {
         <Text  style={tailwind('flex bg-red-500 text-white font-bold py-2 px-4 rounded')}>Name {userState.user? userState.user.name: ''}</Text>
       </Pressable>
       <Text>Email {userState.user? userState.user.email: ''}</Text>
-      <Text>age {userState.user? userState.user.age: ''}</Text>
+      <Text>Username {userState.user? userState.user.username: ''}</Text>
 
      
       <Button

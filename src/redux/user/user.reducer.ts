@@ -12,7 +12,7 @@ const userReducer: Reducer<IUserState> = (
   action,
 ) => {
   switch (action.type) {
-    case UserActionTypes.SET_USER:        
+    case UserActionTypes.SET_USER:
       return {
         ...state,
         user: action.payload,

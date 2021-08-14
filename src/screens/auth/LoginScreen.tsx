@@ -10,7 +10,7 @@ import {
 import { Header, Overlay } from 'react-native-elements';
 import { colors } from './../../utils/theam.json';
 import { login } from '../../services/user/user.service';
-import { useNavigation } from '@react-navigation/native';
+import { LoadingAnimation } from '../../components/loading.component';
 
 const LoginScreen = ({ userState, navigation, setUsers, setToken}: any) => {
     const [email, onChangeEmail] = React.useState("");
@@ -25,16 +25,19 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken}: any) => {
             setLoading(true);
             try {
                 const data = await login({ email, password });
-                console.log((data.data.data.user).toJson());
+                console.log(data.data.data.user);
                 setLoading(false);
-                // setToken(data.data.data.token);
+                setToken(data.data.data.token);
                 // const user: IUser = {
                 //     username: data.data.data.data.user.username,
                 //     email: data.data.data.data.user.username,
                 // }
-                // setUsers(user)
-                navigation.navigate('Home');
+                setUsers(data.data.data.user)
+                navigation.navigate('AddExam');
+                console.log('hello');
+                
             } catch (error) {
+                console.log('hello112');
                 if (error.response?.data?.message) {
                     if ((error.response.data.message).search('Email') !== -1) {
                         setEmailError(error.response.data.message);
@@ -63,8 +66,8 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken}: any) => {
             />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.inner}>
-                    {loading && <Overlay isVisible={loading} >
-                        <ActivityIndicator size="large" color={colors.main_color} />
+                    {loading && <Overlay isVisible={loading} overlayStyle={{backgroundColor: colors.secondary_color}}>
+                        <LoadingAnimation width={100} height={100}/>
                     </Overlay>}
                     <View style={styles.textInputScope}>
                         <Text style={styles.label}>Email</Text>
@@ -88,7 +91,9 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken}: any) => {
                         </Text>
                         <Image source={require('./../../assets/logo/google.png')} style={{ alignSelf: 'center', marginLeft: 10 }} />
                     </View>
-                    <Text style={{ color: colors.main_color, marginTop: 45, textAlign: 'right', marginRight: 25 }}>Create an account
+                    <Text style={{ color: colors.main_color, marginTop: 45, textAlign: 'right', marginRight: 25 }}
+                        onPress={() => {navigation.navigate('SignUp');}}
+                    >Create an account
                     </Text>
                 </View>
             </TouchableWithoutFeedback>
@@ -158,8 +163,8 @@ const mapDispatchToProps = (dispatch: any) => ({
         // console.log('called');
     },
     setUsers: (user: IUser) => {
-        // dispatch(setUser(user));
-        console.log('user',user);
+        dispatch(setUser(user));
+       
     },
     setToken: (token: string) => {
         dispatch(setUserToken(token));
