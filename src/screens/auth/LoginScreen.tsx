@@ -33,7 +33,7 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken}: any) => {
                 //     email: data.data.data.data.user.username,
                 // }
                 setUsers(data.data.data.user)
-                navigation.navigate('AddExam');
+                navigation.navigate('AllExams');
                 console.log('hello');
                 
             } catch (error) {

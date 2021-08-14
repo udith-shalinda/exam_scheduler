@@ -12,20 +12,35 @@ import { IExam } from '../../services/exam/exam.interface';
 import { OneExamComponent } from '../../components/oneExam.component';
 import { useEffect } from 'react';
 import { loadExams } from '../../services/exam/exam.service';
-import { A_setExams } from '../../redux/exam/exam.action';
+import { A_deleteExam, A_setExams } from '../../redux/exam/exam.action';
 import { EmptyAnimation } from '../../components/empty.component';
+import { LoadingAnimation } from '../../components/loading.component';
 
-const AllExamScreen = ({  navigation, examState, useState, a_setExams }: any) => {
+const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteExam}: any) => {
     const [loading, setloading] = React.useState(false);
 
     useEffect(() => {
         getAllExams();
     }, [])
-    
+
     const getAllExams = async () => {
-        const data = await loadExams(useState.token);
-        if(data.data.data){
-            a_setExams(data.data.data);
+        setloading(true);
+        try {
+            const data = await loadExams(userState.token);
+            if (data.data.data) {
+                a_setExams(data.data.data);
+            }
+            setloading(false);
+        } catch (error) {
+            console.log(error);
+            setloading(false);
+        }
+    }
+    const onDeleteExam = async (id: number) => {
+        try {
+            a_deleteExam(id);
+        } catch (error) {
+            
         }
     }
 
@@ -34,27 +49,33 @@ const AllExamScreen = ({  navigation, examState, useState, a_setExams }: any) =>
         <View>
             <Header
                 // leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
-                centerComponent={{ text: 'All Exam', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
+                centerComponent={{ text: 'All Exams', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
                 // rightComponent={{ icon: 'home', color: '#fff' }}
                 backgroundColor={colors.main_color}
             />
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={styles.inner}>
-                    {loading && <Overlay isVisible={loading} >
-                        <ActivityIndicator size="large" color={colors.main_color} />
-                    </Overlay>}
-                    <ScrollView>
-                        {
-                            examState.exams && examState.exams.length > 0 ? 
-                            examState.exams.map((exam: IExam) => {
-                                <OneExamComponent exam={exam} onEdit={()=>{}} onDelete={()=> {}}/>
-                                
-                            }): <EmptyAnimation/>
-                        }
-                    </ScrollView>
+            <View style={styles.inner}>
+                {loading && <Overlay isVisible={loading} >
+                    <LoadingAnimation width={100} height={100} />
+                </Overlay>}
+                <ScrollView style={{ backgroundColor: colors.secondary_color, minHeight: '100%', marginTop: '10%' }}>
+                    {
+                        examState.exams && examState.exams.length > 0 &&
+                        (examState.exams).map((exam: IExam) => (
+                            <OneExamComponent 
+                                key={exam.id}
+                                exam={exam} 
+                                onDelete={()=>{onDeleteExam(exam.id)}}
+                                onEdit={()=> {navigation.navigate('UpdateExam', exam.id)}}    
+                                onClick={()=> {navigation.navigate('Home', exam.id)}}
+                            />)
+                        )
+                    }
+                </ScrollView>
+                {examState?.exams.length <= 0 && <View style={{ justifyContent: 'center', height: '100%', }}>
+                    <EmptyAnimation message={"Examinations not found"} />
 
-                </View>
-            </TouchableWithoutFeedback>
+                </View>}
+            </View>
         </View>
 
     );
@@ -63,15 +84,15 @@ const AllExamScreen = ({  navigation, examState, useState, a_setExams }: any) =>
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        // flex: 1
     },
     inner: {
-        paddingTop: '20%',
-        padding: 24,
-        flex: 1,
+        // paddingTop: '20%',
+        // padding: 24,
+        // flex: 1,
         backgroundColor: colors.secondary_color,
         // justifyContent: "center"
-        minHeight: "100%",
+        // minHeight: "100%",
     },
 });
 
@@ -83,6 +104,9 @@ const mapStateToProps = (state: any) => ({
 const mapDispatchToProps = (dispatch: any) => ({
     a_setExams: (exams: IExam[]) => {
         dispatch(A_setExams(exams));
+    },
+    a_deleteExam: (id: number) => {
+        dispatch(A_deleteExam(id));
     }
 })
 

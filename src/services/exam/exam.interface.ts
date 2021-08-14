@@ -1,5 +1,5 @@
 export interface IExam{
-    id?: number;
+    id: number;
     name: string;
 }
 export interface ICreateExam{

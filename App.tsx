@@ -21,6 +21,7 @@ import LoginScreen from './src/screens/auth/LoginScreen';
 import RegisterScreen from './src/screens/auth/RegisterScreen';
 import AddExamScreen from './src/screens/exam/AddExamScreen';
 import AllExamScreen from './src/screens/exam/AllExamScreen';
+import EditExamScreen from './src/screens/exam/EditExamScreen';
 
 function DetailsScreen({ navigation }) {
   return (
@@ -43,7 +44,8 @@ function App() {
             headerShown: false
           }}>
           <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="AllExam" component={AllExamScreen} />
+          <Stack.Screen name="AllExams" component={AllExamScreen} />
+          <Stack.Screen name="UpdateExam" component={EditExamScreen} />
           <Stack.Screen name="AddExam" component={AddExamScreen} />
           <Stack.Screen name="SignUp" component={RegisterScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
