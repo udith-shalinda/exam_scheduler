@@ -4,13 +4,13 @@ import { Button } from 'react-native-elements/dist/buttons/Button';
 import {
     View, KeyboardAvoidingView,
     TextInput, StyleSheet, Text, Platform,
-    TouchableWithoutFeedback, Keyboard, Image, ActivityIndicator
+    TouchableWithoutFeedback, Keyboard,
 } from 'react-native';
 import { Header, Overlay } from 'react-native-elements';
 import { colors } from '../../utils/theam.json';
-import { addExam, updateExam } from '../../services/exam/exam.service';
+import { updateExam } from '../../services/exam/exam.service';
 import { IExam } from '../../services/exam/exam.interface';
-import { A_addExam, A_updateExam } from '../../redux/exam/exam.action';
+import { A_updateExam } from '../../redux/exam/exam.action';
 import { LoadingAnimation } from '../../components/loading.component';
 
 const EditExamScreen = ({ userState, examState, navigation, a_editExam, route }: any) => {
@@ -24,7 +24,7 @@ const EditExamScreen = ({ userState, examState, navigation, a_editExam, route }:
             navigation.navigate('Login');
         }else{
             const data = examState.exams.find((res: IExam) => res.id === route?.params)
-            onChangeExam(data.exam);
+            onChangeExam(data.name);
             setExamId(route.params)
         }
     }, [])
@@ -35,11 +35,12 @@ const EditExamScreen = ({ userState, examState, navigation, a_editExam, route }:
             try {
                 const data = await updateExam({id: examId, name: exam }, userState.token);
                 setLoading(false);
-                a_editExam(data.data.data)
-                navigation.navigate('Home');
-
+                if(data.data.data){
+                    a_editExam({id: examId, name: exam })
+                }
+                navigation.navigate('AllExams');
             } catch (error) {
-                console.log(error.response?.data?.message);
+                console.log(error.response?.data);
                 
                 if (error.response?.data?.message) {
                     if ((error.response.data.message).search('Exam') !== -1) {

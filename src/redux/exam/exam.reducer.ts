@@ -25,7 +25,16 @@ const examReducer: Reducer<IExamState> = (
     case ExamActionTypes.UPDATE_EXAM:
       return {
         ...state,
-        exams: [state.exams?.filter((exam) => exam.id !== action.payload.id), action.payload]
+        exams: state.exams?.map((exam: IExam) => {
+          if(exam.id === action.payload.id){
+            return {
+              ...exam,
+              name: action.payload.name
+            }
+          }else {
+            return exam;
+          }
+        })
       };
       case ExamActionTypes.DELETE_EXAM:
         return {

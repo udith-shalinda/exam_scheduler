@@ -26,7 +26,7 @@ export const updateExam = async (exam: IExam, token: string) => {
       Authorization: token,
     },
   };
-  return await axios.put(`${API_URL}/updateExam`,exam, headers)5
+  return await axios.put(`${API_URL}/updateExam`,exam, headers);
 };
 export const deleteExam = async (id: number, token: string) => {
   const headers = {

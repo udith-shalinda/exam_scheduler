@@ -1,14 +1,13 @@
 import React from 'react';
-import { StyleSheet, View } from "react-native";
-import { Card, Icon, Text } from "react-native-elements";
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Icon, Text } from "react-native-elements";
 import { colors } from './../utils/theam.json';
 
 
 export const OneExamComponent = ({ exam, onClick, onEdit, onDelete }: any) => {
     return (
         <View style={styles.card}>
-            <TouchableWithoutFeedback style={{ flexDirection: 'row', justifyContent: 'space-between' }} onPress={onClick}>
+            <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between' }} onPress={onClick}>
                 <View>
                     <Text style={{ fontSize: 14, color: colors.main_color }}>Id: {exam.id}</Text>
                     <Text style={{ fontSize: 18, fontWeight: 'bold', color: colors.main_color }}>Name: {exam.name}</Text>
@@ -17,7 +16,7 @@ export const OneExamComponent = ({ exam, onClick, onEdit, onDelete }: any) => {
                     <Icon name='edit' onPress={onEdit}></Icon>
                     <Icon name='delete' color={colors.error_msg} onPress={onDelete}></Icon>
                 </View>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
             {/* </Card> */}
         </View>
     )
