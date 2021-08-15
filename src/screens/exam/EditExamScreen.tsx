@@ -17,7 +17,7 @@ const EditExamScreen = ({ userState, examState, navigation, a_editExam, route }:
     const [exam, onChangeExam] = React.useState("");
     const [examError, setExamError] = React.useState('');
     const [loading, setLoading] = React.useState(false);
-    const [examId, setExamId] = React.useState(undefined);
+    const [examId, setExamId] = React.useState(0);
 
     React.useEffect(() => {
         if(!userState.token && route?.params){
@@ -33,7 +33,7 @@ const EditExamScreen = ({ userState, examState, navigation, a_editExam, route }:
         if (exam.length > 0) {
             setLoading(true);
             try {
-                const data = await updateExam({ name: exam }, userState.token);
+                const data = await updateExam({id: examId, name: exam }, userState.token);
                 setLoading(false);
                 a_editExam(data.data.data)
                 navigation.navigate('Home');

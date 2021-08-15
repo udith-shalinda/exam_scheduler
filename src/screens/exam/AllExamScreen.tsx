@@ -11,7 +11,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { IExam } from '../../services/exam/exam.interface';
 import { OneExamComponent } from '../../components/oneExam.component';
 import { useEffect } from 'react';
-import { loadExams } from '../../services/exam/exam.service';
+import { deleteExam, loadExams } from '../../services/exam/exam.service';
 import { A_deleteExam, A_setExams } from '../../redux/exam/exam.action';
 import { EmptyAnimation } from '../../components/empty.component';
 import { LoadingAnimation } from '../../components/loading.component';
@@ -32,15 +32,21 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
             }
             setloading(false);
         } catch (error) {
-            console.log(error);
+            console.log(error.response.data);
             setloading(false);
         }
     }
     const onDeleteExam = async (id: number) => {
         try {
-            a_deleteExam(id);
+            const data = await deleteExam(id, userState.token);
+            console.log(data.data.data);
+            if (data.data.data) {
+                a_deleteExam(id);
+            }
+            setloading(false);
         } catch (error) {
-            
+            console.log(error.response.data);
+            setloading(false);
         }
     }
 

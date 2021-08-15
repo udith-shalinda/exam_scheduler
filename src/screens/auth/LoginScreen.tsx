@@ -25,7 +25,7 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken}: any) => {
             setLoading(true);
             try {
                 const data = await login({ email, password });
-                console.log(data.data.data.user);
+                // console.log(data.data.data.user);
                 setLoading(false);
                 setToken(data.data.data.token);
                 // const user: IUser = {
@@ -34,10 +34,8 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken}: any) => {
                 // }
                 setUsers(data.data.data.user)
                 navigation.navigate('AllExams');
-                console.log('hello');
                 
             } catch (error) {
-                console.log('hello112');
                 if (error.response?.data?.message) {
                     if ((error.response.data.message).search('Email') !== -1) {
                         setEmailError(error.response.data.message);

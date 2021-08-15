@@ -28,3 +28,11 @@ export const updateExam = async (exam: IExam, token: string) => {
   };
   return await axios.put(`${API_URL}/getAllExams`,exam, headers);
 };
+export const deleteExam = async (id: number, token: string) => {
+  const headers = {
+    headers: {
+      Authorization: token,
+    },
+  };
+  return await axios.delete(`${API_URL}/deleteExam/${id}`, headers);
+};
