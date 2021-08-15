@@ -5,12 +5,15 @@ import { colors } from './../utils/theam.json';
 
 
 export const OneSubjectComponent = ({ subject, onClick, onEdit, onDelete }: any) => {
+    console.log(subject);
+    
     return (
         <View style={styles.card}>
             <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between' }} onPress={onClick}>
                 <View>
-                    <Text style={{ fontSize: 14, color: colors.main_color }}>Id: {subject.id}</Text>
                     <Text style={{ fontSize: 18, fontWeight: 'bold', color: colors.main_color }}>Name: {subject.name}</Text>
+                    <Text style={{ fontSize: 14, color: colors.main_color, paddingLeft: '35%' }}>Years: {subject.mainYear }{subject.repeatedYears && ","+ subject.repeatedYears}</Text>
+                    <Text style={{ fontSize: 14, color: colors.main_color, paddingLeft: '45%'}}>Students: {subject.stu_count}</Text>
                 </View>
                 <View>
                     <Icon name='edit' onPress={onEdit}></Icon>
