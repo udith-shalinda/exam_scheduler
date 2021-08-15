@@ -24,6 +24,7 @@ import AllExamScreen from './src/screens/exam/AllExamScreen';
 import EditExamScreen from './src/screens/exam/EditExamScreen';
 import AllSubjectScreen from './src/screens/subject/AllSubjectScreen';
 import AddSubjectScreen from './src/screens/subject/AddSubjectScreen';
+import EditSubjectScreen from './src/screens/subject/EditSubjectScreen';
 
 function DetailsScreen({ navigation }) {
   return (
@@ -54,6 +55,7 @@ function App() {
           {/* Subject Screens           */}
           <Stack.Screen name="AllSubjects" component={AllSubjectScreen} />
           <Stack.Screen name="AddSubject" component={AddSubjectScreen} />
+          <Stack.Screen name="UpdateSubject" component={EditSubjectScreen} />
 
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Details" component={DetailsScreen} />

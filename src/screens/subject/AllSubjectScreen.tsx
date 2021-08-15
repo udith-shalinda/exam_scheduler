@@ -82,8 +82,7 @@ const AllSubjecScreen = ({ navigation, userState, route, examState}: any) => {
                                 key={_subject.id}
                                 subject={_subject} 
                                 onDelete={()=>{onDeleteSubject(_subject.id)}}
-                                onEdit={()=> {navigation.navigate('UpdateSubject', _subject.id)}}    
-                                onClick={()=> {navigation.navigate('AddSubject', examId)}}
+                                onEdit={()=> {navigation.navigate('UpdateSubject', _subject)}}    
                             />)
                         )
                     }
