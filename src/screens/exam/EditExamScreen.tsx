@@ -69,7 +69,7 @@ const EditExamScreen = ({ userState, examState, navigation, a_editExam, route }:
             />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.inner}>
-                    {loading && <Overlay isVisible={loading} >
+                    {loading && <Overlay isVisible={loading} overlayStyle={{backgroundColor: colors.secondary_color}}>
                         <LoadingAnimation/>
                     </Overlay>}
                     <View style={styles.textInputScope}>

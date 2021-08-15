@@ -10,6 +10,7 @@ import {
 import { Header, Overlay } from 'react-native-elements';
 import { colors } from './../../utils/theam.json';
 import { register } from '../../services/user/user.service';
+import { LoadingAnimation } from '../../components/loading.component';
 
 const RegisterScreen = ({ userState, navigation, setUsers, setToken }: any) => {
     const [email, onChangeEmail] = React.useState("");
@@ -111,8 +112,8 @@ const RegisterScreen = ({ userState, navigation, setUsers, setToken }: any) => {
             />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.inner}>
-                    {loading && <Overlay isVisible={loading} >
-                        <ActivityIndicator size="large" color={colors.main_color} />
+                    {loading && <Overlay isVisible={loading} overlayStyle={{backgroundColor: colors.secondary_color}}>
+                        <LoadingAnimation/>
                     </Overlay>}
                     <View style={styles.textInputScope}>
                         <Text style={styles.label}>username</Text>

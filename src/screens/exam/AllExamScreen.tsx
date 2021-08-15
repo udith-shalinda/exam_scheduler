@@ -60,7 +60,7 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
                 backgroundColor={colors.main_color}
             />
             <View style={styles.inner}>
-                {loading && <Overlay isVisible={loading} >
+                {loading && <Overlay isVisible={loading} overlayStyle={{backgroundColor: colors.secondary_color}}>
                     <LoadingAnimation width={100} height={100} />
                 </Overlay>}
                 <ScrollView style={{ backgroundColor: colors.secondary_color, minHeight: '100%', marginTop: '10%' }}>
