@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux'
-import { IUser, setUser, setUserToken, updateUserLoading } from '../../redux/user/user.action';
 import {
     View, StyleSheet, Text,
-    TouchableWithoutFeedback, Keyboard, ActivityIndicator
 } from 'react-native';
 import { Button } from 'react-native-elements/dist/buttons/Button';
 import { Header, Overlay } from 'react-native-elements';
@@ -12,12 +10,13 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useEffect } from 'react';
 import { EmptyAnimation } from '../../components/empty.component';
 import { LoadingAnimation } from '../../components/loading.component';
-import { deleteSubject, loadSubjects } from '../../services/subject/subject.service';
 import { ISubject } from '../../services/subject/subject.interface';
 import { OneSubjectComponent } from '../../components/oneSubject.component';
 import { IExam } from '../../services/exam/exam.interface';
+import { deleteHall, loadHalls } from '../../services/hall/hall.service';
+import { OneHallComponent } from '../../components/onehall.component';
 
-const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
+const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) => {
     const [loading, setloading] = React.useState(false);
     const [examId, setExamId] = React.useState(route?.params);
     const [exam, setExam] = React.useState('');
@@ -32,7 +31,7 @@ const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
     const getAllSubjects = async () => {
         setloading(true);
         try {
-            const data = await loadSubjects(examId, userState.token);
+            const data = await loadHalls(examId, userState.token);
             // console.log(data.data.data);
             if (data.data.data) {
                 setSubjects(data.data.data);
@@ -45,7 +44,7 @@ const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
     }
     const onDeleteSubject = async (id: number) => {
         try {
-            const data = await deleteSubject(id, userState.token);
+            const data = await deleteHall(id, userState.token);
             // console.log(data.data.data);
             if (data.data.data) {
                 // a_deleteSubject(id);
@@ -63,7 +62,7 @@ const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
         <View>
             <Header
                 // leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
-                centerComponent={{ text: 'All Subjects', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
+                centerComponent={{ text: 'All Time slots', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
                 // rightComponent={{ icon: 'home', color: '#fff' }}
                 backgroundColor={colors.main_color}
             />
@@ -74,18 +73,15 @@ const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
                 {exam.length > 0 && <Text style={{ fontSize: 22, fontWeight: 'bold', color: colors.main_color, marginLeft: 25, marginTop: 20 }}> {'Exam: ' + exam}</Text>}
                 <View style={{flexDirection: 'row', alignSelf: 'flex-end'}}>
                     <View style={styles.btnContainer}>
-                        <Button title="Add Subject" onPress={() => { navigation.navigate('AddSubject', examId) }} />
-                    </View>
-                    <View style={styles.btnContainer}>
-                        <Button title="All Time Slots" onPress={() => { navigation.navigate('AllTimeSlots', examId) }} />
+                        <Button title="Add Time Slot" onPress={() => { navigation.navigate('AddSubject', examId) }} />
                     </View>
                 </View>
                 {subjects && subjects.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, minHeight: '100%', marginTop: '1%' }}>
                     {
                         (subjects).map((_subject: ISubject) => (
-                            <OneSubjectComponent
+                            <OneHallComponent
                                 key={_subject.id}
-                                subject={_subject}
+                                hall={_subject}
                                 onDelete={() => { onDeleteSubject(_subject.id) }}
                                 onEdit={() => { navigation.navigate('UpdateSubject', _subject) }}
                             />)
@@ -134,4 +130,4 @@ const mapDispatchToProps = (dispatch: any) => ({
 
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(AllSubjecScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(AllTimeSlotsScreen);

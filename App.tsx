@@ -25,6 +25,7 @@ import EditExamScreen from './src/screens/exam/EditExamScreen';
 import AllSubjectScreen from './src/screens/subject/AllSubjectScreen';
 import AddSubjectScreen from './src/screens/subject/AddSubjectScreen';
 import EditSubjectScreen from './src/screens/subject/EditSubjectScreen';
+import AllTimeSlotsScreen from './src/screens/hall/AllTimeSlotsScreen';
 
 function DetailsScreen({ navigation }) {
   return (
@@ -56,6 +57,9 @@ function App() {
           <Stack.Screen name="AllSubjects" component={AllSubjectScreen} />
           <Stack.Screen name="AddSubject" component={AddSubjectScreen} />
           <Stack.Screen name="UpdateSubject" component={EditSubjectScreen} />
+          {/* Time slots */}
+          <Stack.Screen name="AllTimeSlots" component={AllTimeSlotsScreen} />
+
 
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Details" component={DetailsScreen} />
