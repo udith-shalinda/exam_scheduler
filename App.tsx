@@ -22,6 +22,7 @@ import RegisterScreen from './src/screens/auth/RegisterScreen';
 import AddExamScreen from './src/screens/exam/AddExamScreen';
 import AllExamScreen from './src/screens/exam/AllExamScreen';
 import EditExamScreen from './src/screens/exam/EditExamScreen';
+import AllSubjectScreen from './src/screens/subject/AllSubjectScreen';
 
 function DetailsScreen({ navigation }) {
   return (
@@ -44,10 +45,14 @@ function App() {
             headerShown: false
           }}>
           <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="SignUp" component={RegisterScreen} />
+          {/* Exam screens` */}
           <Stack.Screen name="AllExams" component={AllExamScreen} />
           <Stack.Screen name="UpdateExam" component={EditExamScreen} />
           <Stack.Screen name="AddExam" component={AddExamScreen} />
-          <Stack.Screen name="SignUp" component={RegisterScreen} />
+          {/* Subject Screens           */}
+          <Stack.Screen name="AllSubjects" component={AllSubjectScreen} />
+
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Details" component={DetailsScreen} />
         </Stack.Navigator>

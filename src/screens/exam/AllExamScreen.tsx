@@ -63,21 +63,21 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
                 {loading && <Overlay isVisible={loading} overlayStyle={{backgroundColor: colors.secondary_color}}>
                     <LoadingAnimation width={100} height={100} />
                 </Overlay>}
-                <ScrollView style={{ backgroundColor: colors.secondary_color, minHeight: '100%', marginTop: '10%' }}>
+                {examState.exams && examState.exams.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, minHeight: '100%', marginTop: '10%' }}>
                     {
-                        examState.exams && examState.exams.length > 0 &&
+                        
                         (examState.exams).map((exam: IExam) => (
                             <OneExamComponent 
                                 key={exam.id}
                                 exam={exam} 
                                 onDelete={()=>{onDeleteExam(exam.id)}}
                                 onEdit={()=> {navigation.navigate('UpdateExam', exam.id)}}    
-                                onClick={()=> {navigation.navigate('Home', exam.id)}}
+                                onClick={()=> {navigation.navigate('AllSubjects', exam.id)}}
                             />)
                         )
                     }
-                </ScrollView>
-                {examState?.exams.length <= 0 && <View style={{ justifyContent: 'center', height: '100%', }}>
+                </ScrollView>}
+                {examState?.exams.length <= 0 && !loading && <View style={{ justifyContent: 'center', height: '100%', }}>
                     <EmptyAnimation message={"Examinations not found"} />
 
                 </View>}
