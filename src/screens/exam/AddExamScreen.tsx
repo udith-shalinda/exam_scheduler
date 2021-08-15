@@ -11,6 +11,7 @@ import { colors } from './../../utils/theam.json';
 import { addExam } from '../../services/exam/exam.service';
 import { IExam } from '../../services/exam/exam.interface';
 import { A_addExam } from '../../redux/exam/exam.action';
+import { LoadingAnimation } from '../../components/loading.component';
 
 const AddExamScreen = ({ userState, navigation, a_addExam }: any) => {
     const [exam, onChangeExam] = React.useState("");
@@ -62,8 +63,8 @@ const AddExamScreen = ({ userState, navigation, a_addExam }: any) => {
             />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.inner}>
-                    {loading && <Overlay isVisible={loading} >
-                        <ActivityIndicator size="large" color={colors.main_color} />
+                    {loading && <Overlay isVisible={loading} overlayStyle={{backgroundColor: colors.secondary_color}}>
+                        <LoadingAnimation />
                     </Overlay>}
                     <View style={styles.textInputScope}>
                         <Text style={styles.label}>Exam Name</Text>
