@@ -14,13 +14,17 @@ import { LoadingAnimation } from '../../components/loading.component';
 import { deleteSubject, loadSubjects } from '../../services/subject/subject.service';
 import { ISubject } from '../../services/subject/subject.interface';
 import { OneSubjectComponent } from '../../components/oneSubject.component';
+import { IExam } from '../../services/exam/exam.interface';
 
-const AllSubjecScreen = ({ navigation, userState, route}: any) => {
+const AllSubjecScreen = ({ navigation, userState, route, examState}: any) => {
     const [loading, setloading] = React.useState(false);
     const [examId, setExamId] = React.useState(route?.params);
+    const [exam, setExam] = React.useState({name: ''});
     const [subjects, setSubjects] = React.useState([]);
 
     useEffect(() => {
+        const data = examState.exams.find((res: IExam) => res.id === route?.params)
+        setExam(data);
         getAllSubjects();
     }, [])
 
@@ -66,7 +70,8 @@ const AllSubjecScreen = ({ navigation, userState, route}: any) => {
                 {loading && <Overlay isVisible={loading} overlayStyle={{backgroundColor: colors.secondary_color}}>
                     <LoadingAnimation width={100} height={100} />
                 </Overlay>}
-                {subjects && subjects.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, minHeight: '100%', marginTop: '10%' }}>
+                {exam.name && <Text style={{fontSize: 22, fontWeight: 'bold', color: colors.main_color, margin: 25, marginTop: 20}}>Exam: {exam.name}</Text>}
+                {subjects && subjects.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, minHeight: '100%', marginTop: '1%' }}>
                     {
                         (subjects).map((_subject: ISubject) => (
                             <OneSubjectComponent 
