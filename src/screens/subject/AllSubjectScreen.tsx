@@ -5,6 +5,7 @@ import {
     View, StyleSheet, Text,
     TouchableWithoutFeedback, Keyboard, ActivityIndicator
 } from 'react-native';
+import { Button } from 'react-native-elements/dist/buttons/Button';
 import { Header, Overlay } from 'react-native-elements';
 import { colors } from './../../utils/theam.json';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -19,12 +20,12 @@ import { IExam } from '../../services/exam/exam.interface';
 const AllSubjecScreen = ({ navigation, userState, route, examState}: any) => {
     const [loading, setloading] = React.useState(false);
     const [examId, setExamId] = React.useState(route?.params);
-    const [exam, setExam] = React.useState({name: ''});
+    const [exam, setExam] = React.useState('');
     const [subjects, setSubjects] = React.useState([]);
 
     useEffect(() => {
         const data = examState.exams.find((res: IExam) => res.id === route?.params)
-        setExam(data);
+        setExam(data.name);
         getAllSubjects();
     }, [])
 
@@ -45,7 +46,7 @@ const AllSubjecScreen = ({ navigation, userState, route, examState}: any) => {
     const onDeleteSubject = async (id: number) => {
         try {
             const data = await deleteSubject(id, userState.token);
-            console.log(data.data.data);
+            // console.log(data.data.data);
             if (data.data.data) {
                 // a_deleteSubject(id);
                 setSubjects(subjects.filter((sub: ISubject) => sub.id !== id));
@@ -70,7 +71,10 @@ const AllSubjecScreen = ({ navigation, userState, route, examState}: any) => {
                 {loading && <Overlay isVisible={loading} overlayStyle={{backgroundColor: colors.secondary_color}}>
                     <LoadingAnimation width={100} height={100} />
                 </Overlay>}
-                {exam.name && <Text style={{fontSize: 22, fontWeight: 'bold', color: colors.main_color, margin: 25, marginTop: 20}}>Exam: {exam.name}</Text>}
+                {exam.length> 0 && <Text style={{fontSize: 22, fontWeight: 'bold', color: colors.main_color, marginLeft: 25, marginTop: 20}}> {'Exam: ' + exam}</Text>}
+                <View style={styles.btnContainer}>
+                        <Button title="Add Subject" onPress={() => {navigation.navigate('AddSubject', examId)}} />
+                    </View>
                 {subjects && subjects.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, minHeight: '100%', marginTop: '1%' }}>
                     {
                         (subjects).map((_subject: ISubject) => (
@@ -79,7 +83,7 @@ const AllSubjecScreen = ({ navigation, userState, route, examState}: any) => {
                                 subject={_subject} 
                                 onDelete={()=>{onDeleteSubject(_subject.id)}}
                                 onEdit={()=> {navigation.navigate('UpdateSubject', _subject.id)}}    
-                                onClick={()=> {navigation.navigate('Home', _subject.id)}}
+                                onClick={()=> {navigation.navigate('AddSubject', examId)}}
                             />)
                         )
                     }
@@ -105,6 +109,15 @@ const styles = StyleSheet.create({
         backgroundColor: colors.secondary_color,
         // justifyContent: "center"
         minHeight: "100%",
+    },
+    btnContainer: {
+        backgroundColor: colors.main_color,
+        marginTop: 5,
+        borderRadius: 50,
+        // width: '50%',
+        alignSelf: 'flex-end',
+        paddingHorizontal: 10,
+        marginRight: 20        
     },
 });
 

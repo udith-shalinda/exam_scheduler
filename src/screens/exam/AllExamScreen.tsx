@@ -39,7 +39,7 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
     const onDeleteExam = async (id: number) => {
         try {
             const data = await deleteExam(id, userState.token);
-            console.log(data.data.data);
+            // console.log(data.data.data);
             if (data.data.data) {
                 a_deleteExam(id);
             }

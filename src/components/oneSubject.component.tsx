@@ -5,7 +5,6 @@ import { colors } from './../utils/theam.json';
 
 
 export const OneSubjectComponent = ({ subject, onClick, onEdit, onDelete }: any) => {
-    console.log(subject);
     
     return (
         <View style={styles.card}>

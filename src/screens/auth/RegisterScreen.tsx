@@ -60,7 +60,7 @@ const RegisterScreen = ({ userState, navigation, setUsers, setToken }: any) => {
                 password
             }
             const result = await register(dataset);
-            console.log(result.data.data);
+            // console.log(result.data.data);
             setLoading(false);
             // navigation.navigate('Home');
         } catch (error) {
@@ -220,8 +220,8 @@ const mapDispatchToProps = (dispatch: any) => ({
         // console.log('called');
     },
     setUsers: (user: IUser) => {
-        // dispatch(setUser(user));
-        console.log('user', user);
+        dispatch(setUser(user));
+        // console.log('user', user);
     },
     setToken: (token: string) => {
         dispatch(setUserToken(token));
