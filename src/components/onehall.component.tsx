@@ -13,7 +13,7 @@ export const OneHallComponent = ({ hall, onEdit, onDelete }: any) => {
                 <View>
                     <Text style={{ fontSize: 18, fontWeight: 'bold', color: colors.main_color }}>{hall.name}</Text>
                     <Text style={{ fontSize: 14, color: colors.main_color, paddingLeft: '0%' }}>{new Date(hall.date).toLocaleDateString() }</Text>
-                    <Text style={{ fontSize: 14, color: colors.main_color, paddingLeft: '0%'}}>{new Date(hall.start).toLocaleTimeString('en-US') + " to "+ new Date(hall.end).toLocaleTimeString('en-US')}</Text>
+                    <Text style={{ fontSize: 14, color: colors.main_color, paddingLeft: '0%'}}>{new Date(hall.start).toLocaleTimeString() + " to "+ new Date(hall.end).toLocaleTimeString()}</Text>
                 </View>
                 <View>
                     <Icon name='edit' onPress={onEdit}></Icon>

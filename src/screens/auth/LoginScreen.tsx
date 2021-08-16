@@ -9,16 +9,39 @@ import {
 } from 'react-native';
 import { Header, Overlay } from 'react-native-elements';
 import { colors } from './../../utils/theam.json';
-import { login } from '../../services/user/user.service';
+import { login, whoAmI } from '../../services/user/user.service';
 import { LoadingAnimation } from '../../components/loading.component';
+import { getToken, storeToken } from '../../services/commen/asyncStorage.service';
 
-const LoginScreen = ({ userState, navigation, setUsers, setToken}: any) => {
+const LoginScreen = ({ userState, navigation, setUsers, setToken }: any) => {
     const [email, onChangeEmail] = React.useState("");
     const [password, onChangePassword] = React.useState('');
     const [emailError, setEmailError] = React.useState('');
     const [PasswordError, setPasswordError] = React.useState('');
     const [loading, setLoading] = React.useState(false);
-    // const navigation = useNavigation();
+
+    React.useEffect(() => {
+        loadUserFromToken();
+    }, [])
+
+    const loadUserFromToken = async () => {
+        setLoading(true);
+        try {
+            const token = await getToken();
+            if (!token) {
+                setLoading(false);
+                return;
+            }
+            const data = await whoAmI(token)
+            console.log(data.data.user);
+            setLoading(false);
+            setToken(token);
+            setUsers(data.data.user)
+            navigation.navigate('AllExams');
+        } catch (error) {
+            setLoading(false);
+        }
+    }
 
     const onLoginPress = async () => {
         if (email.length > 0 && password.length > 0) {
@@ -28,13 +51,10 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken}: any) => {
                 // console.log(data.data.data.user);
                 setLoading(false);
                 setToken(data.data.data.token);
-                // const user: IUser = {
-                //     username: data.data.data.data.user.username,
-                //     email: data.data.data.data.user.username,
-                // }
+                storeToken(data.data.data.token);
                 setUsers(data.data.data.user)
                 navigation.navigate('AllExams');
-                
+
             } catch (error) {
                 if (error.response?.data?.message) {
                     if ((error.response.data.message).search('Email') !== -1) {
@@ -64,8 +84,8 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken}: any) => {
             />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.inner}>
-                    {loading && <Overlay isVisible={loading} overlayStyle={{backgroundColor: colors.secondary_color}}>
-                        <LoadingAnimation width={100} height={100}/>
+                    {loading && <Overlay isVisible={loading} overlayStyle={{ backgroundColor: colors.secondary_color }}>
+                        <LoadingAnimation width={100} height={100} />
                     </Overlay>}
                     <View style={styles.textInputScope}>
                         <Text style={styles.label}>Email</Text>
@@ -90,7 +110,7 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken}: any) => {
                         <Image source={require('./../../assets/logo/google.png')} style={{ alignSelf: 'center', marginLeft: 10 }} />
                     </View>
                     <Text style={{ color: colors.main_color, marginTop: 45, textAlign: 'right', marginRight: 25 }}
-                        onPress={() => {navigation.navigate('SignUp');}}
+                        onPress={() => { navigation.navigate('SignUp'); }}
                     >Create an account
                     </Text>
                 </View>
@@ -162,7 +182,7 @@ const mapDispatchToProps = (dispatch: any) => ({
     },
     setUsers: (user: IUser) => {
         dispatch(setUser(user));
-       
+
     },
     setToken: (token: string) => {
         dispatch(setUserToken(token));

@@ -9,3 +9,12 @@ export const login = async (input: ILoginUser) => {
 export const register =async (input: ISignUpUser) => {
   return await axios.post(`${API_URL}/register`, input);
 };
+
+export const whoAmI =async (token: string) => {
+  const headers = {
+    headers: {
+      Authorization: token,
+    },
+  };
+  return await axios.get(`${API_URL}/whoAmI`, headers);
+};
