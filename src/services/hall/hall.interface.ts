@@ -6,7 +6,7 @@ export interface IHall{
     seats_count: number;
     examId: number;
     exam?: IExam;
-    all_Av_Dates?: any[];
+    all_Av_Dates?: IAv_Date[];
 }
 
 export interface IHallAvDateTime{
@@ -17,4 +17,19 @@ export interface IHallAvDateTime{
     av_date_id: number;
     start: Date;
     end: Date;
+}
+
+export interface IAv_Date{
+    id?: number;
+    date: Date;
+    hallId?: number;
+    hall?: IHall;
+    all_Av_Times?: IAv_Time[];
+}
+export interface IAv_Time{
+    id?: number;
+    start: Date;
+    end: Date;
+    av_date_id?: number;
+    av_Date?: IAv_Date;
 }
