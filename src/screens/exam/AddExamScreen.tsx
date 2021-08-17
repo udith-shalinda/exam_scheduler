@@ -74,8 +74,8 @@ const AddExamScreen = ({ userState, navigation, a_addExam }: any) => {
                         {examError.length > 0 && <Text style={styles.errormessage}>{examError}</Text>}
                     </View>
 
-                    <View style={styles.btnContainer}>
-                        <Button title="Add" onPress={() => onAddExam()} />
+                    <View >
+                        <Button buttonStyle={styles.btnContainer} title="Add" onPress={() => onAddExam()} />
                     </View>
 
                 </View>
@@ -116,8 +116,8 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         width: '50%',
         alignSelf: 'center',
-        paddingTop: 5,
-        paddingBottom: 5
+        paddingHorizontal: 15,
+        marginRight: 20
     },
     label: {
         fontSize: 11,

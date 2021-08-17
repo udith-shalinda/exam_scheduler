@@ -80,8 +80,8 @@ const EditExamScreen = ({ userState, examState, navigation, a_editExam, route }:
                         {examError.length > 0 && <Text style={styles.errormessage}>{examError}</Text>}
                     </View>
 
-                    <View style={styles.btnContainer}>
-                        <Button title="Update" onPress={() => onEditExam()} />
+                    <View >
+                        <Button buttonStyle={styles.btnContainer} title="Update" onPress={() => onEditExam()} />
                     </View>
 
                 </View>
@@ -122,8 +122,8 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         width: '50%',
         alignSelf: 'center',
-        paddingTop: 5,
-        paddingBottom: 5
+        paddingHorizontal: 15,
+        marginRight: 20
     },
     label: {
         fontSize: 11,

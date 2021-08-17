@@ -142,8 +142,8 @@ const RegisterScreen = ({ userState, navigation, setUsers, setToken }: any) => {
                         {errorMessages.confirmPassword.length > 0 && <Text style={styles.errormessage} >{errorMessages.confirmPassword}</Text>}
                     </View>
 
-                    <View style={styles.btnContainer}>
-                        <Button title="Sign Up" onPress={() => onSignUpPress()} />
+                    <View>
+                        <Button buttonStyle={styles.btnContainer} title="Sign Up" onPress={() => onSignUpPress()} />
                     </View>
                     <View style={{ flexDirection: 'row', marginTop: 25, alignSelf: 'center' }}>
                         <Text style={{ color: colors.main_color }}>Or Sign Up with
@@ -190,8 +190,8 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         width: '50%',
         alignSelf: 'center',
-        paddingTop: 5,
-        paddingBottom: 5
+        paddingHorizontal: 15,
+        marginRight: 20
     },
     label: {
         fontSize: 11,

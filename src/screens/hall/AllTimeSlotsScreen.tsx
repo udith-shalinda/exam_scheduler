@@ -59,7 +59,7 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
 
     return (
 
-        <View>
+        <View style={{minHeight: '100%'}}>
             <Header
                 // leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
                 centerComponent={{ text: 'All Time slots', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
@@ -71,23 +71,25 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
                     <LoadingAnimation width={100} height={100} />
                 </Overlay>}
                 {exam.length > 0 && <Text style={{ fontSize: 22, fontWeight: 'bold', color: colors.main_color, marginLeft: 25, marginTop: 20 }}> {'Exam: ' + exam}</Text>}
-                <View style={{flexDirection: 'row', alignSelf: 'flex-end'}}>
-                    <View style={styles.btnContainer}>
-                        <Button title="Add Time Slot" onPress={() => { navigation.navigate('AddSubject', examId) }} />
+                <View style={{ flexDirection: 'row', alignSelf: 'flex-end' }}>
+                    <View>
+                        <Button title="Add Time Slot" onPress={() => { navigation.navigate('AddTimeSlots', examId) }} buttonStyle={styles.btnContainer}/>
                     </View>
                 </View>
-                {subjects && subjects.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, minHeight: '100%', marginTop: '1%' }}>
-                    {
-                        (subjects).map((_subject: ISubject) => (
-                            <OneHallComponent
-                                key={_subject.id}
-                                hall={_subject}
-                                onDelete={() => { onDeleteSubject(_subject.id) }}
-                                onEdit={() => { navigation.navigate('UpdateSubject', _subject) }}
-                            />)
-                        )
-                    }
-                </ScrollView>}
+                {/* <ScrollView> */}
+                    {subjects && subjects.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, marginTop: '1%' }}>
+                        {
+                            (subjects).map((_subject: ISubject, index: number) => (
+                                <OneHallComponent
+                                    key={index}
+                                    hall={_subject}
+                                    onDelete={() => { onDeleteSubject(_subject.id) }}
+                                    onEdit={() => { navigation.navigate('UpdateSubject', _subject) }}
+                                />)
+                            )
+                        }
+                    </ScrollView>}
+                {/* </ScrollView> */}
                 {subjects.length <= 0 && !loading && <View style={{ justifyContent: 'center', height: '100%', }}>
                     <EmptyAnimation message={"Subjects not found"} />
                 </View>}
@@ -108,7 +110,7 @@ const styles = StyleSheet.create({
         // flex: 1,
         backgroundColor: colors.secondary_color,
         // justifyContent: "center"
-        minHeight: "100%",
+        // minHeight: "100%",
     },
     btnContainer: {
         backgroundColor: colors.main_color,
@@ -116,7 +118,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         // width: '50%',
         alignSelf: 'flex-end',
-        paddingHorizontal: 10,
+        paddingHorizontal: 15,
         marginRight: 20
     },
 });

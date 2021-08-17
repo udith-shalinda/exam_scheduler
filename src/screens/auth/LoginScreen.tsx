@@ -33,7 +33,7 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken }: any) => {
                 return;
             }
             const data = await whoAmI(token)
-            console.log(data.data.user);
+            // console.log(data.data.user);
             setLoading(false);
             setToken(token);
             setUsers(data.data.user)
@@ -101,8 +101,8 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken }: any) => {
                         {PasswordError.length > 0 && <Text style={styles.errormessage} >{PasswordError}</Text>}
                     </View>
 
-                    <View style={styles.btnContainer}>
-                        <Button title="Login" onPress={() => onLoginPress()} />
+                    <View>
+                        <Button buttonStyle={styles.btnContainer} title="Login" onPress={() => onLoginPress()} />
                     </View>
                     <View style={{ flexDirection: 'row', marginTop: 25, alignSelf: 'center' }}>
                         <Text style={{ color: colors.main_color }}>Or Login with
@@ -151,8 +151,8 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         width: '50%',
         alignSelf: 'center',
-        paddingTop: 5,
-        paddingBottom: 5
+        paddingHorizontal: 15,
+        marginRight: 20
     },
     label: {
         fontSize: 11,

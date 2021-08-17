@@ -73,11 +73,11 @@ const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
                 </Overlay>}
                 {exam.length > 0 && <Text style={{ fontSize: 22, fontWeight: 'bold', color: colors.main_color, marginLeft: 25, marginTop: 20 }}> {'Exam: ' + exam}</Text>}
                 <View style={{flexDirection: 'row', alignSelf: 'flex-end'}}>
-                    <View style={styles.btnContainer}>
-                        <Button title="Add Subject" onPress={() => { navigation.navigate('AddSubject', examId) }} />
+                    <View>
+                        <Button buttonStyle={styles.btnContainer} title="Add Subject" onPress={() => { navigation.navigate('AddSubject', examId) }} />
                     </View>
-                    <View style={styles.btnContainer}>
-                        <Button title="All Time Slots" onPress={() => { navigation.navigate('AllTimeSlots', examId) }} />
+                    <View >
+                        <Button buttonStyle={styles.btnContainer} title="All Time Slots" onPress={() => { navigation.navigate('AllTimeSlots', examId) }} />
                     </View>
                 </View>
                 {subjects && subjects.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, minHeight: '100%', marginTop: '1%' }}>
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         // width: '50%',
         alignSelf: 'flex-end',
-        paddingHorizontal: 10,
+        paddingHorizontal: 15,
         marginRight: 20
     },
 });

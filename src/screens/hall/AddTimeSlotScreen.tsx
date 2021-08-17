@@ -1,0 +1,189 @@
+import * as React from 'react';
+import { connect } from 'react-redux'
+import { Button } from 'react-native-elements/dist/buttons/Button';
+import {
+    View, KeyboardAvoidingView,
+    TextInput, StyleSheet, Text, Platform,
+    TouchableWithoutFeedback, Keyboard,
+} from 'react-native';
+import { Header, Overlay } from 'react-native-elements';
+import { colors } from './../../utils/theam.json';
+import { IExam } from '../../services/exam/exam.interface';
+import { A_addExam } from '../../redux/exam/exam.action';
+import { LoadingAnimation } from '../../components/loading.component';
+import { addSubject } from '../../services/subject/subject.service';
+import { ICreateSubject } from '../../services/subject/subject.interface';
+import { IHall } from '../../services/hall/hall.interface';
+
+const AddTimeSlotScreen = ({ userState, navigation, examState, route }: any) => {
+    const [subject, onChangeSubject] = React.useState<IHall>({
+        name: '',
+        seats_count: 50,
+        examId: route?.params,
+        all_Av_Dates: []
+    });
+    const [exam, setExam] = React.useState("");
+    const [errorMessages, setErrorMessages] = React.useState({
+        name: '',
+        seats_count: '',
+    });
+    const [loading, setLoading] = React.useState(false);
+
+    React.useEffect(() => {
+        if (!userState.token) {
+            navigation.navigate('Login');
+        } else {
+            const data = examState.exams.find((res: IExam) => res.id === route?.params)
+            setExam(data.name);
+        }
+    }, [])
+
+    const resetErrorMessage = () => {
+        setErrorMessages({
+            name: '',
+            seats_count: ''
+        })
+    }
+
+
+    const onAddSubject = async () => {
+        if ((subject.name).length === 0) {
+            setErrorMessages({
+                ...errorMessages,
+                name: 'name cannot be empty'
+            });
+            return;
+        }
+        if (subject.seats_count <= 0 && subject.seats_count > 4) {
+            setErrorMessages({
+                ...errorMessages,
+                seats_count: 'Year should be between 1 to 4'
+            });
+            return;
+        }
+
+        setLoading(true);
+        try {
+            // const data = await addSubject(subject, userState.token);
+            setLoading(false);
+
+            navigation.navigate('AllSubjects', subject.examId);
+
+        } catch (error) {
+            console.log(error.response?.data?.message);
+            setLoading(false);
+
+        }
+    }
+
+    return (
+
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.container}
+        >
+            <Header
+                // leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
+                centerComponent={{ text: 'Add Subject', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
+                // rightComponent={{ icon: 'home', color: '#fff' }}
+                backgroundColor={colors.main_color}
+            />
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View style={styles.inner}>
+                    {loading && <Overlay isVisible={loading} overlayStyle={{ backgroundColor: colors.secondary_color }}>
+                        <LoadingAnimation />
+                    </Overlay>}
+                    <View style={styles.textInputScope}>
+                        <Text style={styles.label}>Exam Name</Text>
+                        <TextInput placeholder="Name"
+                            onChangeText={(text) => { onChangeSubject({ ...subject, name: text }); resetErrorMessage() }}
+                            value={subject.name} style={styles.textInput} />
+                        {errorMessages.name.length > 0 && <Text style={styles.errormessage}>{errorMessages.name}</Text>}
+                    </View>
+                    <View style={styles.textInputScope}>
+                        <Text style={styles.label}>Seats Count</Text>
+                        <TextInput placeholder="Seats Count" keyboardType="number-pad"
+                            onChangeText={(text) => { onChangeSubject({ ...subject, seats_count: +text }); resetErrorMessage() }}
+                            value={(subject.seats_count).toString()} style={styles.textInput} />
+                        {errorMessages.seats_count.length > 0 && <Text style={styles.errormessage}>{errorMessages.seats_count}</Text>}
+                    </View>
+                    
+                    <View style={styles.textInputScope}>
+                        <Text style={styles.label}>Exam Name</Text>
+                        <TextInput placeholder="Exam name"
+                            editable={false}
+                            value={exam} style={styles.textInput} />
+                    </View>
+                    <View >
+                        <Button buttonStyle={styles.btnContainer} title="Add" onPress={() => onAddSubject()} />
+                    </View>
+
+                </View>
+            </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+
+    );
+}
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    inner: {
+        paddingTop: '20%',
+        padding: 24,
+        flex: 1,
+        backgroundColor: colors.secondary_color
+        // justifyContent: "center"
+    },
+    textInput: {
+        height: 50,
+        margin: 12,
+        marginTop: 0,
+        marginBottom: 0,
+        borderWidth: 1,
+        padding: 10,
+        borderRadius: 12,
+        borderColor: colors.main_color,
+        color: colors.main_color,
+        fontFamily: 'Cochin',
+        fontSize: 16
+    },
+    btnContainer: {
+        backgroundColor: colors.main_color,
+        marginTop: 12,
+        borderRadius: 50,
+        alignSelf: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 45
+    },
+    label: {
+        fontSize: 11,
+        color: colors.main_color,
+        paddingLeft: 25,
+        // backgroundColor: 'red',
+        // marginBottom: -5
+    },
+    errormessage: {
+        fontSize: 13,
+        color: colors.error_msg,
+        paddingLeft: 25
+    },
+    textInputScope: {
+        marginBottom: 10
+    }
+});
+
+const mapStateToProps = (state: any) => ({
+    userState: state.user,
+    examState: state.exam
+})
+
+const mapDispatchToProps = (dispatch: any) => ({
+    a_addExam: (exam: IExam) => {
+        dispatch(A_addExam(exam));
+    }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddTimeSlotScreen);

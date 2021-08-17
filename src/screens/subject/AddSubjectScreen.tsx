@@ -129,8 +129,8 @@ const AddSubjectScreen = ({ userState, navigation, examState, route }: any) => {
                             editable={false}
                             value={exam} style={styles.textInput} />
                     </View>
-                    <View style={styles.btnContainer}>
-                        <Button title="Add" onPress={() => onAddSubject()} />
+                    <View >
+                        <Button buttonStyle={styles.btnContainer} title="Add" onPress={() => onAddSubject()} />
                     </View>
 
                 </View>
@@ -171,8 +171,8 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         width: '50%',
         alignSelf: 'center',
-        paddingTop: 5,
-        paddingBottom: 5
+        paddingHorizontal: 15,
+        marginRight: 20
     },
     label: {
         fontSize: 11,
