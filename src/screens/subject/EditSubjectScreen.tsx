@@ -174,6 +174,7 @@ const styles = StyleSheet.create({
         width: '50%',
         alignSelf: 'center',
         paddingHorizontal: 15,
+        paddingVertical: 12
     },
     label: {
         fontSize: 11,

@@ -24,7 +24,7 @@ export interface IAv_Date{
     date: Date;
     hallId?: number;
     hall?: IHall;
-    all_Av_Times?: IAv_Time[];
+    all_Av_Times: IAv_Time[];
 }
 export interface IAv_Time{
     id?: number;
