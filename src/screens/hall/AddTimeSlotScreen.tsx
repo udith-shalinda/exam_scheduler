@@ -11,14 +11,14 @@ import { colors } from './../../utils/theam.json';
 import { IExam } from '../../services/exam/exam.interface';
 import { A_addExam } from '../../redux/exam/exam.action';
 import { LoadingAnimation } from '../../components/loading.component';
-import { addSubject } from '../../services/subject/subject.service';
-import { ICreateSubject } from '../../services/subject/subject.interface';
 import { IAv_Date, IAv_Time, IHall } from '../../services/hall/hall.interface';
-import DatePicker from 'react-native-date-picker'
 import { ScrollView } from 'react-native-gesture-handler';
+import { SelectDateComponent } from '../../components/selectDate.component';
+import { SelectTimeComponent } from '../../components/selectTime.component';
+import { addHall } from '../../services/hall/hall.service';
 
 const AddTimeSlotScreen = ({ userState, navigation, examState, route }: any) => {
-    const [subject, onChangeSubject] = React.useState<IHall>({
+    const [timeSlot, onChangetimeSlot] = React.useState<IHall>({
         name: '',
         seats_count: 50,
         examId: route?.params,
@@ -30,8 +30,8 @@ const AddTimeSlotScreen = ({ userState, navigation, examState, route }: any) => 
         seats_count: '',
     });
     const [loading, setLoading] = React.useState(false);
-    const [visibleTime, setvisibleTime] = React.useState(false);
-    const [visibleDate, setvisibleDate] = React.useState(false);
+    const [visibleTime, setvisibleTime] = React.useState({state: false, dateId: 0, timeId: 0});
+    const [visibleDate, setvisibleDate] = React.useState({state: false, index: 0});
 
     const [av_dates, setAv_dates] = React.useState<IAv_Date[]>([])
 
@@ -39,6 +39,7 @@ const AddTimeSlotScreen = ({ userState, navigation, examState, route }: any) => 
 
 
     const [date, setDate] = React.useState(new Date())
+    const [time, setTime] = React.useState({start: new Date(), end: new Date()})
 
 
     React.useEffect(() => {
@@ -62,6 +63,16 @@ const AddTimeSlotScreen = ({ userState, navigation, examState, route }: any) => 
     const deleteAv_date = (id: number) => {
         setAv_dates(av_dates.filter((av_date: IAv_Date, index: number) => index !== id));
     }
+    const updateAv_date =(date: Date, dateId:number)=> {
+        setAv_dates(
+            av_dates.map((av_date: IAv_Date, index: number) => {
+                if (index === dateId) {
+                    av_date.date = date
+                }
+                return av_date;
+            })
+        )
+    }
     const addnewTime = (dateId: number) => {
         setAv_dates(
             av_dates.map((av_date: IAv_Date, index: number) => {
@@ -74,8 +85,22 @@ const AddTimeSlotScreen = ({ userState, navigation, examState, route }: any) => 
                 return av_date;
             })
         )
-        // console.log(av_dates);
-
+    }
+    const updateAv_time =(time: {start: Date, end: Date}, dateId:number, timeId: number)=> {
+        setAv_dates(
+            av_dates.map((av_date: IAv_Date, index: number) => {
+                if (index === dateId) {
+                    av_date.all_Av_Times = av_date.all_Av_Times.map((av_time: IAv_Time, tIndex: number) => {
+                        if(tIndex === timeId){
+                            av_time.start = time.start;
+                            av_time.end = time.end;
+                        }
+                        return av_time;
+                    })
+                }
+                return av_date;
+            })
+        )
     }
     const deleteAv_time = (dateId: number, timeId: number) => {
         setAv_dates(av_dates.map((av_date: IAv_Date, dIndex) => {
@@ -94,29 +119,21 @@ const AddTimeSlotScreen = ({ userState, navigation, examState, route }: any) => 
     }
 
 
-    const onAddSubject = async () => {
-        if ((subject.name).length === 0) {
+    const onAddTimeSlot = async () => {
+        onChangetimeSlot({...timeSlot, all_Av_Dates: av_dates})
+        if ((timeSlot.name).length === 0) {
             setErrorMessages({
                 ...errorMessages,
                 name: 'name cannot be empty'
             });
             return;
         }
-        if (subject.seats_count <= 0 && subject.seats_count > 4) {
-            setErrorMessages({
-                ...errorMessages,
-                seats_count: 'Year should be between 1 to 4'
-            });
-            return;
-        }
 
         setLoading(true);
         try {
-            // const data = await addSubject(subject, userState.token);
+            const data = await addHall(timeSlot, userState.token);
+            console.log(data.data.data);
             setLoading(false);
-
-            navigation.navigate('AllSubjects', subject.examId);
-
         } catch (error) {
             console.log(error.response?.data?.message);
             setLoading(false);
@@ -145,15 +162,15 @@ const AddTimeSlotScreen = ({ userState, navigation, examState, route }: any) => 
                         <View style={styles.textInputScope}>
                             <Text style={styles.label}>Hall Name</Text>
                             <TextInput placeholder="Name"
-                                onChangeText={(text) => { onChangeSubject({ ...subject, name: text }); resetErrorMessage() }}
-                                value={subject.name} style={styles.textInput} />
+                                onChangeText={(text) => { onChangetimeSlot({ ...timeSlot, name: text }); resetErrorMessage() }}
+                                value={timeSlot.name} style={styles.textInput} />
                             {errorMessages.name.length > 0 && <Text style={styles.errormessage}>{errorMessages.name}</Text>}
                         </View>
                         <View style={styles.textInputScope}>
                             <Text style={styles.label}>Seats Count</Text>
                             <TextInput placeholder="Seats Count" keyboardType="number-pad"
-                                onChangeText={(text) => { onChangeSubject({ ...subject, seats_count: +text }); resetErrorMessage() }}
-                                value={(subject.seats_count).toString()} style={styles.textInput} />
+                                onChangeText={(text) => { onChangetimeSlot({ ...timeSlot, seats_count: +text }); resetErrorMessage() }}
+                                value={(timeSlot.seats_count).toString()} style={styles.textInput} />
                             {errorMessages.seats_count.length > 0 && <Text style={styles.errormessage}>{errorMessages.seats_count}</Text>}
                         </View>
 
@@ -175,20 +192,20 @@ const AddTimeSlotScreen = ({ userState, navigation, examState, route }: any) => 
                                         <View style={styles.textInputScope}>
                                             <Text style={styles.label}>Date</Text>
                                             <TextInput placeholder="Exam Date"
-                                                onPressIn={() => setvisibleDate(true)}
-                                                value={index.toString()} style={styles.textInput} />
+                                                onPressIn={() => setvisibleDate({state: true, index})}
+                                                value={av_date.date.toLocaleDateString()} style={styles.textInput} />
                                         </View>
                                         {
                                             av_date.all_Av_Times.length > 0 &&
                                             av_date.all_Av_Times.map((av_time: IAv_Time, tIndex: number) => {
                                                 return (
-                                                    <View style={{ marginLeft: 40 }}>
+                                                    <View style={{ marginLeft: 40 }} key={tIndex}>
                                                         <View style={{ flexDirection: 'row', alignContent: 'space-between' }}>
                                                             <View style={styles.timeInputScope}>
                                                                 <Text style={styles.label}>Date</Text>
                                                                 <TextInput placeholder="Exam Date"
-                                                                    onPressIn={() => setvisibleDate(true)}
-                                                                    value={tIndex.toString()} style={styles.textInput} />
+                                                                    onPressIn={() => setvisibleTime({state: true, dateId: index, timeId: tIndex})}
+                                                                    value={av_time.start.toLocaleTimeString() + " - "+ av_time.end.toLocaleTimeString()} style={styles.textInput} />
                                                             </View>
                                                             <TouchableOpacity style={styles.timeIcon} onPress={() => { deleteAv_time(index,tIndex) }}>
                                                                 <Icon name='minus-circle' type="font-awesome-5" color={colors.error_msg}></Icon>
@@ -214,15 +231,22 @@ const AddTimeSlotScreen = ({ userState, navigation, examState, route }: any) => 
 
 
                         {/* overlays */}
-                        <Overlay isVisible={visibleTime} onBackdropPress={() => { setvisibleTime(false) }}>
+                        <SelectTimeComponent
+                            visibleTime = {visibleTime}
+                            time={time}
+                            setTime={updateAv_time}
+                            setvisibleTime={setvisibleTime}
+                        >
+                        </SelectTimeComponent>
+                        {/* <Overlay isVisible={visibleTime} onBackdropPress={() => { setvisibleTime(false) }}>
                             <DatePicker
                                 mode="time"
                                 minuteInterval={30}
                                 date={date}
                                 onDateChange={setDate}
                             />
-                        </Overlay>
-                        <Overlay isVisible={visibleDate} onBackdropPress={() => { setvisibleDate(false) }}>
+                        </Overlay> */}
+                        {/* <Overlay isVisible={visibleDate} onBackdropPress={() => { setvisibleDate(false) }}>
                             <DatePicker
                                 mode="date"
                                 minuteInterval={30}
@@ -230,9 +254,15 @@ const AddTimeSlotScreen = ({ userState, navigation, examState, route }: any) => 
                                 onDateChange={setDate}
                             />
 
-                        </Overlay>
+                        </Overlay> */}
+                        <SelectDateComponent 
+                            date={date}
+                            setDate={updateAv_date}
+                            setvisibleDate={setvisibleDate}
+                            visibleDate={visibleDate}
+                        ></SelectDateComponent>
                         <View >
-                            <Button buttonStyle={styles.btnContainer} title="Add" onPress={() => onAddSubject()} />
+                            <Button buttonStyle={styles.btnContainer} title="Add" onPress={() => onAddTimeSlot()} />
                         </View>
 
                     </View>
