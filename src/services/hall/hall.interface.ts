@@ -33,3 +33,14 @@ export interface IAv_Time{
     av_date_id?: number;
     av_Date?: IAv_Date;
 }
+
+export interface ITimeSlot{
+    av_date_id?: number;
+    hall_id?: number;
+    name: string;
+    seats_count: number;
+    examId: number;
+    date: string;
+    start: string;
+    end: string;
+}
