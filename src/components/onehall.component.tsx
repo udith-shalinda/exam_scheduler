@@ -16,7 +16,7 @@ export const OneHallComponent = ({ hall, onEdit, onDelete }: any) => {
                     <Text style={{ fontSize: 14, color: colors.main_color, paddingLeft: '0%'}}>{new Date(hall.start).toLocaleTimeString() + " to "+ new Date(hall.end).toLocaleTimeString()}</Text>
                 </View>
                 <View>
-                    <Icon name='edit' onPress={onEdit}></Icon>
+                    {/* <Icon name='edit' onPress={onEdit}></Icon> */}
                     <Icon name='delete' color={colors.error_msg} onPress={onDelete}></Icon>
                 </View>
             </View>

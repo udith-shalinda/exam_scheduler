@@ -72,7 +72,7 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
                                 exam={exam} 
                                 onDelete={()=>{onDeleteExam(exam.id)}}
                                 onEdit={()=> {navigation.navigate('UpdateExam', exam.id)}}    
-                                onClick={()=> {navigation.navigate('AllSubjects', exam.id)}}
+                                onClick={()=> {navigation.navigate('TimeTable', exam.id)}}
                             />)
                         )
                     }

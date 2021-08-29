@@ -28,6 +28,7 @@ import EditSubjectScreen from './src/screens/subject/EditSubjectScreen';
 import AllTimeSlotsScreen from './src/screens/hall/AllTimeSlotsScreen';
 import AddTimeSlotScreen from './src/screens/hall/AddTimeSlotScreen';
 import EditTimeSlotScreen from './src/screens/hall/EditTimeSlotScreen';
+import TimeTableScreen from './src/screens/timtable/TimeTableScreen';
 
 function DetailsScreen({ navigation }) {
   return (
@@ -63,6 +64,9 @@ function App() {
           <Stack.Screen name="AllTimeSlots" component={AllTimeSlotsScreen} />
           <Stack.Screen name="AddTimeSlots" component={AddTimeSlotScreen} />
           <Stack.Screen name="UpdateTimeSlot" component={EditTimeSlotScreen} />
+          {/* Time Table view */}
+          <Stack.Screen name="TimeTable" component={TimeTableScreen} />
+
 
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Details" component={DetailsScreen} />

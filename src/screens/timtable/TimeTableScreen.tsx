@@ -10,24 +10,49 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useEffect } from 'react';
 import { EmptyAnimation } from '../../components/empty.component';
 import { LoadingAnimation } from '../../components/loading.component';
+import { deleteSubject, loadSubjects } from '../../services/subject/subject.service';
 import { ISubject } from '../../services/subject/subject.interface';
+import { OneSubjectComponent } from '../../components/oneSubject.component';
 import { IExam } from '../../services/exam/exam.interface';
-import { deleteHall, loadHalls } from '../../services/hall/hall.service';
-import { OneHallComponent } from '../../components/onehall.component';
-import { ITimeSlot } from '../../services/hall/hall.interface';
+import { loadHalls } from '../../services/hall/hall.service';
 
-const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) => {
+const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
     const [loading, setloading] = React.useState(false);
     const [examId, setExamId] = React.useState(route?.params);
     const [exam, setExam] = React.useState('');
+    const [timeTable, settimeTable] = React.useState([])
+    // To generate time table
+    const [subjects, setSubjects] = React.useState([]);
     const [timeSlots, settimeSlots] = React.useState([]);
+    const [timeTableGenerated, settimeTableGenerated] = React.useState(false)
+
+
 
     useEffect(() => {
         const data = examState.exams.find((res: IExam) => res.id === route?.params)
         setExam(data.name);
-        getAllTimeSlots();
+        getTimeTable();
+        if(timeTable.length ===0 && subjects.length === 0 && timeSlots.length === 0){
+            settimeTableGenerated(false);
+        }else{
+            settimeTableGenerated(true);
+        }
     }, [])
+    const generateTimeTable = async  () => {
+        if(subjects.length === 0 && timeSlots.length === 0){
+            getAllSubjects();
+            getAllTimeSlots();
+        }
+        // TODO generate time table
+    }
 
+    const getTimeTable = async () => {
+        setloading(true);
+        // TODO load time table;
+        setTimeout(() => {
+            setloading(false);
+        }, 1000);
+    }
     const getAllTimeSlots = async () => {
         setloading(true);
         try {
@@ -42,13 +67,13 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
             setloading(false);
         }
     }
-    const onDeleteSubject = async (id: number) => {
+    const getAllSubjects = async () => {
+        setloading(true);
         try {
-            const data = await deleteHall(id, userState.token);
-            // console.log(data.data.data[0]);
+            const data = await loadSubjects(examId, userState.token);
+            // console.log(data.data.data);
             if (data.data.data) {
-                // a_deleteSubject(id);
-                settimeSlots(timeSlots.filter((sub: ISubject) => sub.id !== id));
+                setSubjects(data.data.data);
             }
             setloading(false);
         } catch (error) {
@@ -59,39 +84,40 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
 
     return (
 
-        <View style={{height: '100%', backgroundColor: colors.secondary_color}}>
+        <View>
             <Header
                 // leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
-                centerComponent={{ text: 'All Time slots', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
+                centerComponent={{ text: 'Time Table', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
                 // rightComponent={{ icon: 'home', color: '#fff' }}
                 backgroundColor={colors.main_color}
             />
-            <View style={styles.inners}>
+            <View style={styles.inner}>
                 {loading && <Overlay isVisible={loading} overlayStyle={{ backgroundColor: colors.secondary_color }}>
                     <LoadingAnimation width={100} height={100} />
                 </Overlay>}
                 {exam.length > 0 && <Text style={{ fontSize: 22, fontWeight: 'bold', color: colors.main_color, marginLeft: 25, marginTop: 20 }}> {'Exam: ' + exam}</Text>}
                 <View style={{ flexDirection: 'row', alignSelf: 'flex-end' }}>
                     <View>
-                        <Button title="Add Time Slot" onPress={() => { navigation.navigate('AddTimeSlots', examId) }} buttonStyle={styles.btnContainer}/>
+                        {!timeTableGenerated && <Button buttonStyle={styles.btnContainer} title="Genarate Time Table" onPress={() => { generateTimeTable() }} />}
+                    </View>
+                    <View >
+                        <Button buttonStyle={styles.btnContainer} title="All Subjects" onPress={() => { navigation.navigate('AllSubjects', examId) }} />
                     </View>
                 </View>
-                {/* <ScrollView> */}
-                    {timeSlots && timeSlots.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, marginTop: '1%' }}>
-                        {
-                            (timeSlots).map((_timeSlot: ITimeSlot, index: number) => (
-                                <OneHallComponent
-                                    key={index}
-                                    hall={_timeSlot}
-                                    onDelete={() => { onDeleteSubject(1) }}
-                                    onEdit={() => { navigation.navigate('UpdateTimeSlot', {timeSlot: _timeSlot, examId }) }}
-                                />)
-                            )
-                        }
-                    </ScrollView>}
-                {/* </ScrollView> */}
-                {timeSlots.length <= 0 && !loading && <View style={{ justifyContent: 'center' }}>
-                    <EmptyAnimation message={"timeSlots not found"} />
+                {subjects && subjects.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, minHeight: '90%', marginTop: '1%' }}>
+                    {
+                        (subjects).map((_subject: ISubject) => (
+                            <OneSubjectComponent
+                                key={_subject.id}
+                                subject={_subject}
+                                onDelete={() => { }}
+                                onEdit={() => { navigation.navigate('UpdateSubject', _subject) }}
+                            />)
+                        )
+                    }
+                </ScrollView>}
+                {timeTable.length <= 0 && !loading && <View style={{ justifyContent: 'center', height: '60%', }}>
+                    <EmptyAnimation message={"Time table not found"} />
                 </View>}
             </View>
         </View>
@@ -104,13 +130,13 @@ const styles = StyleSheet.create({
     container: {
         // flex: 1
     },
-    inners: {
+    inner: {
         // paddingTop: '20%',
         // padding: 24,
         // flex: 1,
         backgroundColor: colors.secondary_color,
         // justifyContent: "center"
-        height: "90%",
+        minHeight: "100%",
     },
     btnContainer: {
         backgroundColor: colors.main_color,
@@ -132,4 +158,4 @@ const mapDispatchToProps = (dispatch: any) => ({
 
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(AllTimeSlotsScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(TimeTableScreen);
