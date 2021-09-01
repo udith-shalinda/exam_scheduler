@@ -29,6 +29,7 @@ import AllTimeSlotsScreen from './src/screens/hall/AllTimeSlotsScreen';
 import AddTimeSlotScreen from './src/screens/hall/AddTimeSlotScreen';
 import EditTimeSlotScreen from './src/screens/hall/EditTimeSlotScreen';
 import TimeTableScreen from './src/screens/timtable/TimeTableScreen';
+import { linking } from './src/config/linking';
 
 function DetailsScreen({ navigation }) {
   return (
@@ -45,7 +46,7 @@ function App() {
 
   return (
     <Provider store={store}>
-      <NavigationContainer>
+      <NavigationContainer linking={linking}>
         <Stack.Navigator
           screenOptions={{
             headerShown: false
