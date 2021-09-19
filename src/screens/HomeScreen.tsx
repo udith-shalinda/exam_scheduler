@@ -5,6 +5,14 @@ import { IUser, setUser, updateUserLoading } from '../redux/user/user.action';
 import { tailwind } from './../../tailwind';
 
 const HomeScreen = ({ navigation, updateLoading, userState, setUsers }) => {
+
+  React.useEffect(() => {
+   if(navigation.canGoBack()){
+     navigation.goBack();
+   }else{
+     navigation.navigate('Login')
+   } 
+  }, [])
   
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
