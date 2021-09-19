@@ -9,7 +9,7 @@ export const EmptyAnimation = (props: {width?: number; height?: number, message?
     return (
         <View style={{alignItems:"center"}}>
             <LottieView
-              source={require('../utils/lottieFiles/empty_blue.json')}
+              source={require('../utils/lottieFiles/empty.json')}
               autoPlay
               loop
               style={{width: width || 300, height: height || 300}}
