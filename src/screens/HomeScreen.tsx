@@ -9,25 +9,32 @@ import { Text } from 'react-native-elements';
 
 const HomeScreen = ({ navigation, updateLoading, userState, setUsers }: any) => {
 
+
   React.useEffect(() => {
-    setTimeout(() => {
-      if(navigation.canGoBack()){
-        navigation.goBack();
-      }else{
-        navigation.navigate('Login')
-      } 
-    }, 2000);
-  }, [])
-  
+    const unsubscribe = navigation.addListener('focus', () => {
+      console.log(navigation.canGoBack());
+      setTimeout(() => {
+        if (navigation.canGoBack()) {
+          navigation.goBack();
+        } else {
+          navigation.navigate('Login')
+        }
+      }, 2000);
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.main_color }}>
-            <LottieView
-              source={require('../utils/lottieFiles/init_schedular.json')}
-              autoPlay
-              loop
-              style={{width: 200, height: 200}}
-            />
-            <Text style={{fontSize: 25, color: colors.secondary_color, fontWeight: 'bold'}}>Exam Scheduler</Text>
+      <LottieView
+        source={require('../utils/lottieFiles/init_schedular.json')}
+        autoPlay
+        loop
+        style={{ width: 200, height: 200 }}
+      />
+      <Text style={{ fontSize: 25, color: colors.secondary_color, fontWeight: 'bold' }}>Exam Scheduler</Text>
     </View>
   );
 }
@@ -36,11 +43,11 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  updateLoading: (loading:boolean)  => {
+  updateLoading: (loading: boolean) => {
     dispatch(updateUserLoading(loading));
     // console.log('called');
   },
-  setUsers: (user:IUser)  => {
+  setUsers: (user: IUser) => {
     dispatch(setUser(user));
     // console.log('user',user);
   }
