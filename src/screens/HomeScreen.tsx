@@ -1,58 +1,33 @@
 import * as React from 'react';
 import { connect } from 'react-redux'
-import { View, Text, Button, Pressable, Alert } from 'react-native';
+import { View } from 'react-native';
 import { IUser, setUser, updateUserLoading } from '../redux/user/user.action';
-import { tailwind } from './../../tailwind';
+import { colors } from './../utils/theam.json';
+import LottieView from 'lottie-react-native';
+import { Text } from 'react-native-elements';
 
-const HomeScreen = ({ navigation, updateLoading, userState, setUsers }) => {
+
+const HomeScreen = ({ navigation, updateLoading, userState, setUsers }: any) => {
 
   React.useEffect(() => {
-   if(navigation.canGoBack()){
-     navigation.goBack();
-   }else{
-     navigation.navigate('Login')
-   } 
+    setTimeout(() => {
+      if(navigation.canGoBack()){
+        navigation.goBack();
+      }else{
+        navigation.navigate('Login')
+      } 
+    }, 2000);
   }, [])
   
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Pressable onPress={() => navigation.navigate('Details')}>
-        <Text  style={tailwind('flex bg-red-500 text-white font-bold py-2 px-4 rounded')}>Name {userState.user? userState.user.name: ''}</Text>
-      </Pressable>
-      <Text>Email {userState.user? userState.user.email: ''}</Text>
-      <Text>Username {userState.user? userState.user.username: ''}</Text>
-
-     
-      <Button
-        color="red"
-        accessibilityLabel="hello there"
-        title="Go to Details"
-        onPress={() => navigation.navigate('Details')}
-      />
-      <Button
-        title="set User"
-        onPress={() => setUsers({name: 'udith', email: 'udith@tes.com', age: 23})}
-      />
-       <Button
-        title="log User"
-        onPress={() => Alert.alert(
-          "Alert Title",
-          "My Alert Msg",
-          [
-            {
-              text: "Ask me later",
-              onPress: () => console.log("Ask me later pressed")
-            },
-            {
-              text: "Cancel",
-              onPress: () => console.log("Cancel Pressed"),
-              style: "cancel"
-            },
-            { text: "OK", onPress: () => console.log("OK Pressed") }
-          ]
-        )
-        }
-      />
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.main_color }}>
+            <LottieView
+              source={require('../utils/lottieFiles/init_schedular.json')}
+              autoPlay
+              loop
+              style={{width: 200, height: 200}}
+            />
+            <Text style={{fontSize: 25, color: colors.secondary_color, fontWeight: 'bold'}}>Exam Scheduler</Text>
     </View>
   );
 }

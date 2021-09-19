@@ -1,7 +1,6 @@
 import React from 'react';
 import LottieView from 'lottie-react-native';
 import { View } from 'react-native';
-import { Text } from 'react-native-elements';
 
 export const LoadingAnimation = (props: {width?: number; height?: number}) => {
     const {width, height} = props;
