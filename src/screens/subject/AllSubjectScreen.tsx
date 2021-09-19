@@ -3,12 +3,12 @@ import { connect } from 'react-redux'
 import { IUser, setUser, setUserToken, updateUserLoading } from '../../redux/user/user.action';
 import {
     View, StyleSheet, Text,
-    TouchableWithoutFeedback, Keyboard, ActivityIndicator
+    TouchableWithoutFeedback, Keyboard, ActivityIndicator,
 } from 'react-native';
 import { Button } from 'react-native-elements/dist/buttons/Button';
-import { Header, Overlay } from 'react-native-elements';
+import { FAB, Header, Overlay } from 'react-native-elements';
 import { colors } from './../../utils/theam.json';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useEffect } from 'react';
 import { EmptyAnimation } from '../../components/empty.component';
 import { LoadingAnimation } from '../../components/loading.component';
@@ -16,6 +16,7 @@ import { deleteSubject, loadSubjects } from '../../services/subject/subject.serv
 import { ISubject } from '../../services/subject/subject.interface';
 import { OneSubjectComponent } from '../../components/oneSubject.component';
 import { IExam } from '../../services/exam/exam.interface';
+import { Icon } from 'react-native-elements/dist/icons/Icon';
 
 const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
     const [loading, setloading] = React.useState(false);
@@ -60,7 +61,7 @@ const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
 
     return (
 
-        <View>
+        <View style={{ height: '100%' }}>
             <Header
                 // leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
                 centerComponent={{ text: 'All Subjects', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
@@ -72,10 +73,10 @@ const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
                     <LoadingAnimation width={100} height={100} />
                 </Overlay>}
                 {exam.length > 0 && <Text style={{ fontSize: 22, fontWeight: 'bold', color: colors.main_color, marginLeft: 25, marginTop: 20 }}> {'Exam: ' + exam}</Text>}
-                <View style={{flexDirection: 'row', alignSelf: 'flex-end'}}>
-                    <View>
+                <View style={{ flexDirection: 'row', alignSelf: 'flex-end' }}>
+                    {/* <View>
                         <Button buttonStyle={styles.btnContainer} title="Add Subject" onPress={() => { navigation.navigate('AddSubject', examId) }} />
-                    </View>
+                    </View> */}
                     {/* <View >
                         <Button buttonStyle={styles.btnContainer} title="All Time Slots" onPress={() => { navigation.navigate('AllTimeSlots', examId) }} />
                     </View> */}
@@ -96,6 +97,15 @@ const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
                     <EmptyAnimation message={"Subjects not found"} />
                 </View>}
             </View>
+            <View style={{ position: 'absolute', flexDirection: 'column', justifyContent: 'flex-end', right: 10, height: '100%', bottom: 10 }}>
+                <Button
+                    onPress={() => { navigation.navigate('AddSubject', examId) }}
+                    buttonStyle={{ backgroundColor: colors.main_color, width: 60, height: 60, borderRadius: 50 }}
+                    icon={
+                        <Icon name="plus" type="font-awesome-5" style={{ alignSelf: 'flex-end' }} color={colors.secondary_color} size={20}></Icon>
+                    }
+                />
+            </View>
         </View>
 
     );
@@ -109,10 +119,10 @@ const styles = StyleSheet.create({
     inner: {
         // paddingTop: '20%',
         // padding: 24,
-        // flex: 1,
+        // flex: 1,50
         backgroundColor: colors.secondary_color,
         // justifyContent: "center"
-        minHeight: "100%",
+        // minHeight: "70%",
     },
     btnContainer: {
         backgroundColor: colors.main_color,

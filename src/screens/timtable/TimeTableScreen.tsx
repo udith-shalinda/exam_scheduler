@@ -18,7 +18,7 @@ import { loadHalls } from '../../services/hall/hall.service';
 
 const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
     const [loading, setloading] = React.useState(false);
-    const [examId, setExamId] = React.useState(route?.params);
+    const [examId, setExamId] = React.useState(route?.params.id);
     const [exam, setExam] = React.useState('');
     const [timeTable, settimeTable] = React.useState([])
     // To generate time table
@@ -29,7 +29,7 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
 
 
     useEffect(() => {
-        const data = examState.exams.find((res: IExam) => res.id === route?.params)
+        const data = examState.exams.find((res: IExam) => res.id === route?.params.id)
         setExam(data.name);
         getTimeTable();
         if(timeTable.length ===0 && subjects.length === 0 && timeSlots.length === 0){
@@ -100,9 +100,9 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
                     <View>
                         {!timeTableGenerated && <Button buttonStyle={styles.btnContainer} title="Genarate Time Table" onPress={() => { generateTimeTable() }} />}
                     </View>
-                    <View >
+                    {/* <View >
                         <Button buttonStyle={styles.btnContainer} title="All Subjects" onPress={() => { navigation.navigate('AllSubjects', examId) }} />
-                    </View>
+                    </View> */}
                 </View>
                 {subjects && subjects.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, minHeight: '90%', marginTop: '1%' }}>
                     {

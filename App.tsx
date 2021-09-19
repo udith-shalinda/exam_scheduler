@@ -67,7 +67,7 @@ function App() {
           <Stack.Screen name="AddTimeSlots" component={AddTimeSlotScreen} />
           <Stack.Screen name="UpdateTimeSlot" component={EditTimeSlotScreen} />
           {/* Time Table view */}
-          <Stack.Screen name="TimeTable" component={TimeTableScreen} />
+          {/* <Stack.Screen name="TimeTable" component={TimeTableScreen} /> */}
 
           {/* Init page */}
           <Stack.Screen name="Home" component={HomeScreen} />

@@ -15,6 +15,7 @@ import { IExam } from '../../services/exam/exam.interface';
 import { deleteHall, loadHalls } from '../../services/hall/hall.service';
 import { OneHallComponent } from '../../components/onehall.component';
 import { ITimeSlot } from '../../services/hall/hall.interface';
+import { Icon } from 'react-native-elements/dist/icons/Icon';
 
 const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) => {
     const [loading, setloading] = React.useState(false);
@@ -74,9 +75,9 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
                 </Overlay>}
                 {exam.length > 0 && <Text style={{ fontSize: 22, fontWeight: 'bold', color: colors.main_color, marginLeft: 25, marginTop: 20 }}> {'Exam: ' + exam}</Text>}
                 <View style={{ flexDirection: 'row', alignSelf: 'flex-end' }}>
-                    <View>
+                    {/* <View>
                         <Button title="Add Time Slot" onPress={() => { navigation.navigate('AddTimeSlots', examId) }} buttonStyle={styles.btnContainer}/>
-                    </View>
+                    </View> */}
                 </View>
                 {/* <ScrollView> */}
                     {timeSlots && timeSlots.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, marginTop: '1%' }}>
@@ -96,6 +97,15 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
                     <EmptyAnimation message={"timeSlots not found"} />
                 </View>}
             </View>
+            <View style={{ position: 'absolute', flexDirection: 'column', justifyContent: 'flex-end', right: 10, height: '100%', bottom: 10 }}>
+                <Button
+                    onPress={() => { navigation.navigate('AddTimeSlots', examId)}}
+                    buttonStyle={{ backgroundColor: colors.main_color, width: 60, height: 60, borderRadius: 50 }}
+                    icon={
+                        <Icon name="plus" type="font-awesome-5" style={{ alignSelf: 'flex-end' }} color={colors.secondary_color} size={20}></Icon>
+                    }
+                />
+            </View>
         </View>
 
     );
@@ -112,7 +122,7 @@ const styles = StyleSheet.create({
         // flex: 1,
         backgroundColor: colors.secondary_color,
         // justifyContent: "center"
-        height: "90%",
+        // height: "90%",
     },
     btnContainer: {
         backgroundColor: colors.main_color,

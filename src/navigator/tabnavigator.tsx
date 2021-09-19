@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import LoginScreen from '../screens/auth/LoginScreen';
-import AllExamScreen from '../screens/exam/AllExamScreen';
 import AllSubjectScreen from '../screens/subject/AllSubjectScreen';
 import AllTimeSlotsScreen from '../screens/hall/AllTimeSlotsScreen';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import {colors } from './../utils/theam.json';
+import TimeTableScreen from '../screens/timtable/TimeTableScreen';
 const Tab = createBottomTabNavigator();
 
 export const TabNavigator = ({ route }: any) => {
@@ -35,7 +34,7 @@ export const TabNavigator = ({ route }: any) => {
                 tabBarInactiveBackgroundColor: colors.secondary_color
             })}
         >
-            <Tab.Screen name="TimeTable" component={AllExamScreen} initialParams={{...route.params.params, color: colors.main_color}} />
+            <Tab.Screen name="TimeTable" component={TimeTableScreen} initialParams={{...route.params.params, color: colors.main_color}} />
             <Tab.Screen name="Subjects" component={AllSubjectScreen} initialParams={{...route.params.params, color: colors.main_color}} />
             <Tab.Screen name="TimeSlots" component={AllTimeSlotsScreen} initialParams={{...route.params.params, color: colors.main_color}} />
         </Tab.Navigator>
