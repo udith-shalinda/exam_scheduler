@@ -50,7 +50,7 @@ function App() {
         <Stack.Navigator
           screenOptions={{
             headerShown: false
-          }}>
+          }} initialRouteName="Home">
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="SignUp" component={RegisterScreen} />
           {/* Exam screens` */}
