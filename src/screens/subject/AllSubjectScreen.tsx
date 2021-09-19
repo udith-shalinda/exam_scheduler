@@ -19,12 +19,12 @@ import { IExam } from '../../services/exam/exam.interface';
 
 const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
     const [loading, setloading] = React.useState(false);
-    const [examId, setExamId] = React.useState(route?.params);
+    const [examId, setExamId] = React.useState(route?.params.id);
     const [exam, setExam] = React.useState('');
     const [subjects, setSubjects] = React.useState([]);
 
     useEffect(() => {
-        const data = examState.exams.find((res: IExam) => res.id === route?.params)
+        const data = examState.exams.find((res: IExam) => res.id === route?.params.id)
         setExam(data.name);
         getAllSubjects();
     }, [])
@@ -76,9 +76,9 @@ const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
                     <View>
                         <Button buttonStyle={styles.btnContainer} title="Add Subject" onPress={() => { navigation.navigate('AddSubject', examId) }} />
                     </View>
-                    <View >
+                    {/* <View >
                         <Button buttonStyle={styles.btnContainer} title="All Time Slots" onPress={() => { navigation.navigate('AllTimeSlots', examId) }} />
-                    </View>
+                    </View> */}
                 </View>
                 {subjects && subjects.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, minHeight: '100%', marginTop: '1%' }}>
                     {

@@ -30,6 +30,7 @@ import AddTimeSlotScreen from './src/screens/hall/AddTimeSlotScreen';
 import EditTimeSlotScreen from './src/screens/hall/EditTimeSlotScreen';
 import TimeTableScreen from './src/screens/timtable/TimeTableScreen';
 import { linking } from './src/config/linking';
+import { TabNavigator } from './src/navigator/tabnavigator';
 
 function DetailsScreen({ navigation }) {
   return (
@@ -58,18 +59,22 @@ function App() {
           <Stack.Screen name="UpdateExam" component={EditExamScreen} />
           <Stack.Screen name="AddExam" component={AddExamScreen} />
           {/* Subject Screens           */}
-          <Stack.Screen name="AllSubjects" component={AllSubjectScreen} />
+          {/* <Stack.Screen name="AllSubjects" component={AllSubjectScreen} /> */}
           <Stack.Screen name="AddSubject" component={AddSubjectScreen} />
           <Stack.Screen name="UpdateSubject" component={EditSubjectScreen} />
           {/* Time slots */}
-          <Stack.Screen name="AllTimeSlots" component={AllTimeSlotsScreen} />
+          {/* <Stack.Screen name="AllTimeSlots" component={AllTimeSlotsScreen} /> */}
           <Stack.Screen name="AddTimeSlots" component={AddTimeSlotScreen} />
           <Stack.Screen name="UpdateTimeSlot" component={EditTimeSlotScreen} />
           {/* Time Table view */}
           <Stack.Screen name="TimeTable" component={TimeTableScreen} />
 
-
+          {/* Init page */}
           <Stack.Screen name="Home" component={HomeScreen} />
+
+          {/* Tab page */}
+          <Stack.Screen name="Tab" component={TabNavigator} />
+
           <Stack.Screen name="Details" component={DetailsScreen} />
         </Stack.Navigator>
       </NavigationContainer>

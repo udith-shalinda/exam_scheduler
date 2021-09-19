@@ -18,12 +18,14 @@ import { ITimeSlot } from '../../services/hall/hall.interface';
 
 const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) => {
     const [loading, setloading] = React.useState(false);
-    const [examId, setExamId] = React.useState(route?.params);
+    const [examId, setExamId] = React.useState(route?.params.id);
     const [exam, setExam] = React.useState('');
     const [timeSlots, settimeSlots] = React.useState([]);
 
     useEffect(() => {
-        const data = examState.exams.find((res: IExam) => res.id === route?.params)
+        console.log(route);
+        
+        const data = examState.exams.find((res: IExam) => res.id === route?.params.id)
         setExam(data.name);
         getAllTimeSlots();
     }, [])
