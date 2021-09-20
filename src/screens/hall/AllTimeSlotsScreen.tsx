@@ -24,8 +24,6 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
     const [timeSlots, settimeSlots] = React.useState([]);
 
     useEffect(() => {
-        console.log(route);
-        
         const data = examState.exams.find((res: IExam) => res.id === route?.params.id)
         setExam(data.name);
         getAllTimeSlots();
@@ -100,7 +98,7 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
             <View style={{ position: 'absolute', flexDirection: 'column', justifyContent: 'flex-end', right: 10, height: '100%', bottom: 10 }}>
                 <Button
                     onPress={() => { navigation.navigate('AddTimeSlots', examId)}}
-                    buttonStyle={{ backgroundColor: colors.main_color, width: 60, height: 60, borderRadius: 50 }}
+                    buttonStyle={{ backgroundColor: colors.main_color, width: 50, height: 50, borderRadius: 50 }}
                     icon={
                         <Icon name="plus" type="font-awesome-5" style={{ alignSelf: 'flex-end' }} color={colors.secondary_color} size={20}></Icon>
                     }

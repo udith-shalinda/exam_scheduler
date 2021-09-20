@@ -15,6 +15,7 @@ import { ISubject } from '../../services/subject/subject.interface';
 import { OneSubjectComponent } from '../../components/oneSubject.component';
 import { IExam } from '../../services/exam/exam.interface';
 import { loadHalls } from '../../services/hall/hall.service';
+import { generateTimeTableFromData, getAllTimeTableByExam } from '../../services/timetable/TimeTable.service';
 
 const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
     const [loading, setloading] = React.useState(false);
@@ -22,7 +23,7 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
     const [exam, setExam] = React.useState('');
     const [timeTable, settimeTable] = React.useState([])
     // To generate time table
-    const [subjects, setSubjects] = React.useState([]);
+    const [subjects, setSubjects] = React.useState<ISubject[]>([]);
     const [timeSlots, settimeSlots] = React.useState([]);
     const [timeTableGenerated, settimeTableGenerated] = React.useState(false)
 
@@ -32,26 +33,36 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
         const data = examState.exams.find((res: IExam) => res.id === route?.params.id)
         setExam(data.name);
         getTimeTable();
-        if(timeTable.length ===0 && subjects.length === 0 && timeSlots.length === 0){
+        if (timeTable.length === 0 && subjects.length === 0 && timeSlots.length === 0) {
             settimeTableGenerated(false);
-        }else{
+        } else {
             settimeTableGenerated(true);
         }
     }, [])
-    const generateTimeTable = async  () => {
-        if(subjects.length === 0 && timeSlots.length === 0){
+
+    useEffect(() => {
+        if(subjects.length > 0 && timeSlots.length > 0 ){
+            generateTimeTableFromData(subjects, timeSlots);
+        }
+    }, [subjects, timeSlots])
+
+    const generateTimeTable = async () => {
+        if (subjects.length === 0 && timeSlots.length === 0) {
             getAllSubjects();
             getAllTimeSlots();
         }
+    }
+    const setTimeTableFromData = () => {
         // TODO generate time table
+
     }
 
     const getTimeTable = async () => {
         setloading(true);
-        // TODO load time table;
-        setTimeout(() => {
-            setloading(false);
-        }, 1000);
+        const data = await getAllTimeTableByExam(examId, userState.token);
+        settimeTable(data.data.data);
+        settimeTableGenerated(true);
+        setloading(false);
     }
     const getAllTimeSlots = async () => {
         setloading(true);
@@ -59,7 +70,7 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
             const data = await loadHalls(examId, userState.token);
             // console.log(data.data.data[0]);
             if (data.data.data) {
-                settimeSlots(data.data.data);
+                settimeSlots(data.data.data);                
             }
             setloading(false);
         } catch (error) {
@@ -84,7 +95,7 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
 
     return (
 
-        <View>
+        <View style={{ height: '100%' }}>
             <Header
                 // leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
                 centerComponent={{ text: 'Time Table', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
@@ -116,7 +127,7 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
                         )
                     }
                 </ScrollView>}
-                {timeTable.length <= 0 && !loading && <View style={{ justifyContent: 'center', height: '60%', }}>
+                {timeTable.length <= 0 && !loading && <View style={{ justifyContent: 'center' }}>
                     <EmptyAnimation message={"Time table not found"} />
                 </View>}
             </View>

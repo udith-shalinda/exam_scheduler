@@ -1,11 +1,15 @@
 import {ITimeSlot} from '../hall/hall.interface';
 import {ISubject} from '../subject/subject.interface';
 import {ITimeTable} from './TimeTable.interface';
+import axios from 'axios';
+import {API_URL} from '../../config/config';
 
 export const generateTimeTableFromData = (
   allSubjects: ISubject[],
   allTimeSlots: ITimeSlot[],
 ) => {
+  console.log(allTimeSlots);
+  
   const timeTable: ITimeTable[] = [];
   const daysBetweenExams = 1;
 
@@ -32,6 +36,7 @@ export const generateTimeTableFromData = (
     let possibleDate: any = null;
     let subjectYears: any[] = subject.repeatedYears.split(',').map(Number);
     subjectYears.push(subject.mainYear);
+    subject.subjectId = subject.id;
     // console.log(subjectYears);
     // get last possible date for the exams
     subjectYears.forEach((year: any) => {
@@ -82,11 +87,12 @@ export const generateTimeTableFromData = (
             // @ts-ignore
           new Date(timeSlot.date) - possibleDate >= 0 &&
           subject.time <= hourDiff &&
-          !subject.hall_id
+          !subject.hallId
         ) {
-          (subject.hall_id = timeSlot.hall_id),
+          (subject.hallId = timeSlot.hall_id),
             (subject.start = timeSlot.start),
             (subject.end = timeSlot.start + subject.time);
+            subject.date = timeSlot.date
 
           timeSlot.start = timeSlot.start + subject.time;
 
@@ -107,6 +113,25 @@ export const generateTimeTableFromData = (
       }
     });
   });
-
+  console.log(allSubjects);
   return allSubjects;
+};
+
+
+export const addTimeTable = async (input: ITimeTable[], token: string) => {
+  const headers = {
+    headers: {
+      Authorization: token,
+    },
+  };
+  return await axios.post(`${API_URL}/createTimeTable`, input, headers);
+};
+
+export const getAllTimeTableByExam = async (id: number, token: string) => {
+  const headers = {
+    headers: {
+      Authorization: token,
+    },
+  };
+  return await axios.get(`${API_URL}/getAllTimeTablesByExam/${id}`, headers);
 };
