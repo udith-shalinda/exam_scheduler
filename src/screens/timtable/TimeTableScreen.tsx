@@ -16,6 +16,7 @@ import { OneSubjectComponent } from '../../components/oneSubject.component';
 import { IExam } from '../../services/exam/exam.interface';
 import { loadHalls } from '../../services/hall/hall.service';
 import { generateTimeTableFromData, getAllTimeTableByExam } from '../../services/timetable/TimeTable.service';
+import { OneTimeTableComponent } from '../../components/oneTimeTable.component';
 
 const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
     const [loading, setloading] = React.useState(false);
@@ -25,7 +26,7 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
     // To generate time table
     const [subjects, setSubjects] = React.useState<ISubject[]>([]);
     const [timeSlots, settimeSlots] = React.useState([]);
-    const [timeTableGenerated, settimeTableGenerated] = React.useState(false)
+    const [timeTableGenerated, settimeTableGenerated] = React.useState(true)
 
 
 
@@ -73,7 +74,7 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
                 settimeSlots(data.data.data);                
             }
             setloading(false);
-        } catch (error) {
+        } catch (error: any) {
             console.log(error.response.data);
             setloading(false);
         }
@@ -87,7 +88,7 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
                 setSubjects(data.data.data);
             }
             setloading(false);
-        } catch (error) {
+        } catch (error: any) {
             console.log(error.response.data);
             setloading(false);
         }
@@ -115,14 +116,12 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
                         <Button buttonStyle={styles.btnContainer} title="All Subjects" onPress={() => { navigation.navigate('AllSubjects', examId) }} />
                     </View> */}
                 </View>
-                {subjects && subjects.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, minHeight: '90%', marginTop: '1%' }}>
+                {timeTable && timeTable.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, minHeight: '90%', marginTop: '1%' }}>
                     {
-                        (subjects).map((_subject: ISubject) => (
-                            <OneSubjectComponent
-                                key={_subject.id}
-                                subject={_subject}
-                                onDelete={() => { }}
-                                onEdit={() => { navigation.navigate('UpdateSubject', _subject) }}
+                        (timeTable).map((_time: ISubject) => (
+                            <OneTimeTableComponent
+                                key={_time.id}
+                                timeTable={_time}
                             />)
                         )
                     }

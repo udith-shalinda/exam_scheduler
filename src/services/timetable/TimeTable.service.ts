@@ -135,3 +135,12 @@ export const getAllTimeTableByExam = async (id: number, token: string) => {
   };
   return await axios.get(`${API_URL}/getAllTimeTablesByExam/${id}`, headers);
 };
+
+export const getTimeTableByYear = async (examId: number, year: number, token: string) => {
+  const headers = {
+    headers: {
+      Authorization: token
+    },
+  };
+  return await axios.get(`${API_URL}/getAllTimeTableByYear/${examId}/${year}`, headers);
+};
