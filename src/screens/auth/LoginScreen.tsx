@@ -5,7 +5,7 @@ import { Button } from 'react-native-elements/dist/buttons/Button';
 import {
     View, KeyboardAvoidingView,
     TextInput, StyleSheet, Text, Platform,
-    TouchableWithoutFeedback, Keyboard, Image, ActivityIndicator
+    TouchableWithoutFeedback, Keyboard, Image, ActivityIndicator, BackHandler
 } from 'react-native';
 import { Header, Overlay } from 'react-native-elements';
 import { colors } from './../../utils/theam.json';
@@ -22,7 +22,14 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken }: any) => {
 
     React.useEffect(() => {
         loadUserFromToken();
+        const unsubscribe = BackHandler.addEventListener('hardwareBackPress', ()=> {
+            return true;
+        });
+        return () => {
+            unsubscribe
+        }
     }, [])
+    
 
     const loadUserFromToken = async () => {
         setLoading(true);
@@ -37,7 +44,12 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken }: any) => {
             setLoading(false);
             setToken(token);
             setUsers(data.data.user)
-            navigation.navigate('AllExams');
+            if (navigation.canGoBack()) {
+                console.log(navigation.getParent());
+                // navigation.goBack();
+            } else {
+                navigation.navigate('AllExams');
+            }
         } catch (error) {
             setLoading(false);
         }

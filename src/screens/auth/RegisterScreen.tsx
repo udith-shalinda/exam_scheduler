@@ -62,8 +62,8 @@ const RegisterScreen = ({ userState, navigation, setUsers, setToken }: any) => {
             const result = await register(dataset);
             // console.log(result.data.data);
             setLoading(false);
-            // navigation.navigate('Home');
-        } catch (error) {
+            navigation.navigate('Login');
+        } catch (error: any) {
             if (error.response?.data?.message) {
                 if ((error.response.data.message).search('Email') !== -1) {
                     setErrorMessage(
