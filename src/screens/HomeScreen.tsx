@@ -12,7 +12,6 @@ const HomeScreen = ({ navigation, updateLoading, userState, setUsers }: any) => 
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      console.log(navigation.canGoBack());
       setTimeout(() => {
         if (navigation.canGoBack()) {
           navigation.goBack();
