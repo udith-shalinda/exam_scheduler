@@ -74,7 +74,7 @@ const AddSubjectScreen = ({ userState, navigation, examState, route }: any) => {
 
             navigation.navigate('AllSubjects', subject.examId);
 
-        } catch (error) {
+        } catch (error: any) {
             console.log(error.response?.data?.message);
             setLoading(false);
 

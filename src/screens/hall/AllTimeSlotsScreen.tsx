@@ -38,7 +38,7 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
                 settimeSlots(data.data.data);
             }
             setloading(false);
-        } catch (error) {
+        } catch (error: any) {
             console.log(error.response.data);
             setloading(false);
         }
@@ -52,7 +52,7 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
                 settimeSlots(timeSlots.filter((sub: ISubject) => sub.id !== id));
             }
             setloading(false);
-        } catch (error) {
+        } catch (error: any) {
             console.log(error.response.data);
             setloading(false);
         }

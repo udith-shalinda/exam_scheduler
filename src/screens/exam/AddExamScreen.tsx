@@ -33,7 +33,7 @@ const AddExamScreen = ({ userState, navigation, a_addExam }: any) => {
                 a_addExam(data.data.data)
                 navigation.navigate('Home');
 
-            } catch (error) {
+            } catch (error: any) {
                 console.log(error.response?.data?.message);
                 
                 if (error.response?.data?.message) {

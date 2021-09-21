@@ -135,7 +135,7 @@ const EditTimeSlotScreen = ({ userState, navigation, examState, route }: any) =>
             const data = await addHall(timeSlot, userState.token);
             console.log(data.data.data);
             setLoading(false);
-        } catch (error) {
+        } catch (error: any) {
             console.log(error.response?.data?.message);
             setLoading(false);
 

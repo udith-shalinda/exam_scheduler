@@ -39,7 +39,7 @@ const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
                 setSubjects(data.data.data);
             }
             setloading(false);
-        } catch (error) {
+        } catch (error: any) {
             console.log(error.response.data);
             setloading(false);
         }
@@ -53,7 +53,7 @@ const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
                 setSubjects(subjects.filter((sub: ISubject) => sub.id !== id));
             }
             setloading(false);
-        } catch (error) {
+        } catch (error: any) {
             console.log(error.response.data);
             setloading(false);
         }

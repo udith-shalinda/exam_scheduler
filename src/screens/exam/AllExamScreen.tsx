@@ -31,7 +31,7 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
                 a_setExams(data.data.data);
             }
             setloading(false);
-        } catch (error) {
+        } catch (error: any) {
             console.log(error.response.data);
             setloading(false);
         }
@@ -44,7 +44,7 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
                 a_deleteExam(id);
             }
             setloading(false);
-        } catch (error) {
+        } catch (error: any) {
             console.log(error.response.data);
             setloading(false);
         }

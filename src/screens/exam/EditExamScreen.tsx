@@ -39,7 +39,7 @@ const EditExamScreen = ({ userState, examState, navigation, a_editExam, route }:
                     a_editExam({id: examId, name: exam })
                 }
                 navigation.navigate('AllExams');
-            } catch (error) {
+            } catch (error: any) {
                 console.log(error.response?.data);
                 
                 if (error.response?.data?.message) {
