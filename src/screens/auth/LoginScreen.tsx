@@ -5,7 +5,7 @@ import { Button } from 'react-native-elements/dist/buttons/Button';
 import {
     View, KeyboardAvoidingView,
     TextInput, StyleSheet, Text, Platform,
-    TouchableWithoutFeedback, Keyboard, Image, ActivityIndicator, BackHandler
+    TouchableWithoutFeedback, Keyboard, Image, BackHandler
 } from 'react-native';
 import { Header, Overlay } from 'react-native-elements';
 import { colors } from './../../utils/theam.json';
@@ -22,14 +22,14 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken }: any) => {
 
     React.useEffect(() => {
         loadUserFromToken();
-        const unsubscribe = BackHandler.addEventListener('hardwareBackPress', ()=> {
+        const unsubscribe = BackHandler.addEventListener('hardwareBackPress', () => {
             return true;
         });
         return () => {
             unsubscribe
         }
     }, [])
-    
+
 
     const loadUserFromToken = async () => {
         setLoading(true);
@@ -44,13 +44,8 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken }: any) => {
             setLoading(false);
             setToken(token);
             setUsers(data.data.user)
-            if (navigation.canGoBack()) {
-                console.log(navigation.getParent());
-                // navigation.goBack();
-            } else {
-                navigation.navigate('AllExams');
-            }
-        } catch (error) {
+            navigation.navigate('AllExams');
+        } catch (error: any) {
             setLoading(false);
         }
     }
@@ -67,7 +62,7 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken }: any) => {
                 setUsers(data.data.data.user)
                 navigation.navigate('AllExams');
 
-            } catch (error) {
+            } catch (error: any) {
                 if (error.response?.data?.message) {
                     if ((error.response.data.message).search('Email') !== -1) {
                         setEmailError(error.response.data.message);
