@@ -16,6 +16,8 @@ target 'Exam_scheduler' do
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-async-storage/async-storage'
 
+  pod 'RNGoogleSignin', :path => '../node_modules/@react-native-google-signin/google-signin'
+
   target 'Exam_schedulerTests' do
     inherit! :complete
     # Pods for testing

@@ -12,6 +12,13 @@ import { colors } from './../../utils/theam.json';
 import { login, whoAmI } from '../../services/user/user.service';
 import { LoadingAnimation } from '../../components/loading.component';
 import { getToken, storeToken } from '../../services/commen/asyncStorage.service';
+import {
+    GoogleSignin,
+    GoogleSigninButton,
+    statusCodes,
+  } from '@react-native-google-signin/google-signin';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+  
 
 const LoginScreen = ({ userState, navigation, setUsers, setToken }: any) => {
     const [email, onChangeEmail] = React.useState("");
@@ -21,7 +28,7 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken }: any) => {
     const [loading, setLoading] = React.useState(false);
 
     React.useEffect(() => {
-        loadUserFromToken();
+        // loadUserFromToken();
         const unsubscribe = BackHandler.addEventListener('hardwareBackPress', () => {
             return true;
         });
@@ -30,7 +37,23 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken }: any) => {
         }
     }, [])
 
-
+    const signIns = async () => {
+        try {
+          await GoogleSignin.hasPlayServices();
+          const userInfo = await GoogleSignin.signIn();
+          console.log(userInfo);
+        } catch (error: any) {
+          if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+            // user cancelled the login flow
+          } else if (error.code === statusCodes.IN_PROGRESS) {
+            // operation (e.g. sign in) is in progress already
+          } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+            // play services not available or outdated
+          } else {
+            // some other error happened
+          }
+        }
+      };
     const loadUserFromToken = async () => {
         setLoading(true);
         try {
@@ -112,9 +135,13 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken }: any) => {
                         <Button buttonStyle={styles.btnContainer} title="Login" onPress={() => onLoginPress()} />
                     </View>
                     <View style={{ flexDirection: 'row', marginTop: 25, alignSelf: 'center' }}>
+                        <TouchableOpacity 
+                            onPress={signIns}
+                        >
                         <Text style={{ color: colors.main_color }}>Or Login with
                         </Text>
                         <Image source={require('./../../assets/logo/google.png')} style={{ alignSelf: 'center', marginLeft: 10 }} />
+                        </TouchableOpacity>
                     </View>
                     <Text style={{ color: colors.main_color, marginTop: 45, textAlign: 'right', marginRight: 25 }}
                         onPress={() => { navigation.navigate('SignUp'); }}
