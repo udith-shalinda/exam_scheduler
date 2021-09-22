@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "321671343547",
+    "project_id": "exam-sheduler",
+    "storage_bucket": "exam-sheduler.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321671343547:android:48e51ee72df93c558a289e",
+        "android_client_info": {
+          "package_name": "com.exam_scheduler"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321671343547-s54ugjq9k3qjbt1ugjhb89hr14ch51ma.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.exam_scheduler",
+            "certificate_hash": "9bb5a7f4d2c6be2d6120bda7617ac91c1f740905"
+          }
+        },
+        {
+          "client_id": "321671343547-n776ci66rkkdtjn1kg76a9bsh2d6fkco.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBanAJQSgkbitsVhKfJ_mainzy69LCi3so"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321671343547-n776ci66rkkdtjn1kg76a9bsh2d6fkco.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
