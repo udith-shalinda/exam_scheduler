@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "321671343547-mc3ih0mnam5uf2n5ulcfs8nlo4bfd5rh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.exam_scheduler",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
           "client_id": "321671343547-s54ugjq9k3qjbt1ugjhb89hr14ch51ma.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
