@@ -5,12 +5,14 @@ import { Button } from 'react-native-elements/dist/buttons/Button';
 import {
     View, KeyboardAvoidingView,
     TextInput, StyleSheet, Text, Platform,
-    TouchableWithoutFeedback, Keyboard, Image, ActivityIndicator
+    TouchableWithoutFeedback, Keyboard, Image, ActivityIndicator, TouchableOpacity
 } from 'react-native';
 import { Header, Overlay } from 'react-native-elements';
 import { colors } from './../../utils/theam.json';
-import { register } from '../../services/user/user.service';
+import { login, register } from '../../services/user/user.service';
 import { LoadingAnimation } from '../../components/loading.component';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { storeToken } from '../../services/commen/asyncStorage.service';
 
 const RegisterScreen = ({ userState, navigation, setUsers, setToken }: any) => {
     const [email, onChangeEmail] = React.useState("");
@@ -98,6 +100,48 @@ const RegisterScreen = ({ userState, navigation, setUsers, setToken }: any) => {
         })
     }
 
+    const loginWithGoogle = async () => {
+        setLoading(true);
+        try {
+            await GoogleSignin.configure()
+            const Guser = await GoogleSignin.getCurrentUser()
+            if (Guser) {
+                saveLoginDetails(Guser.user.email, Guser.user.id);
+            } else {
+                const userInfo = await GoogleSignin.signIn();
+                const dataset = {
+                    email: userInfo.user.email,
+                    username: userInfo.user.givenName,
+                    password: userInfo.user.id
+                }
+                await register(dataset);
+                saveLoginDetails(userInfo.user.email, userInfo.user.id);
+            }
+        } catch (error: any) {
+            setLoading(false);
+            console.log(error.code);
+            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+                // user cancelled the login flow
+            } else if (error.code === statusCodes.IN_PROGRESS) {
+                // operation (e.g. sign in) is in progress already
+            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+                // play services not available or outdated
+            } else {
+                // some other error happened
+            }
+        }
+
+    }
+    const saveLoginDetails = async (email: string, password: string) => {
+        const data = await login({ email, password });
+        // console.log(data.data.data.user);
+        setToken(data.data.data.token);
+        storeToken(data.data.data.token);
+        setUsers(data.data.data.user)
+        setLoading(false);
+        navigation.navigate('AllExams');
+    }
+
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -112,8 +156,8 @@ const RegisterScreen = ({ userState, navigation, setUsers, setToken }: any) => {
             />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.inner}>
-                    {loading && <Overlay isVisible={loading} overlayStyle={{backgroundColor: colors.secondary_color}}>
-                        <LoadingAnimation/>
+                    {loading && <Overlay isVisible={loading} overlayStyle={{ backgroundColor: colors.secondary_color }}>
+                        <LoadingAnimation />
                     </Overlay>}
                     <View style={styles.textInputScope}>
                         <Text style={styles.label}>username</Text>
@@ -145,13 +189,15 @@ const RegisterScreen = ({ userState, navigation, setUsers, setToken }: any) => {
                     <View>
                         <Button buttonStyle={styles.btnContainer} title="Sign Up" onPress={() => onSignUpPress()} />
                     </View>
-                    <View style={{ flexDirection: 'row', marginTop: 25, alignSelf: 'center' }}>
-                        <Text style={{ color: colors.main_color }}>Or Sign Up with
-                        </Text>
-                        <Image source={require('./../../assets/logo/google.png')} style={{ alignSelf: 'center', marginLeft: 10 }} />
-                    </View>
+                    <TouchableOpacity onPress={loginWithGoogle}>
+                        <View style={{ flexDirection: 'row', marginTop: 25, alignSelf: 'center' }}>
+                            <Text style={{ color: colors.main_color }}>Or Sign Up with
+                            </Text>
+                            <Image source={require('./../../assets/logo/google.png')} style={{ alignSelf: 'center', marginLeft: 10 }} />
+                        </View>
+                    </TouchableOpacity>
                     <Text style={{ color: colors.main_color, marginTop: 45, textAlign: 'right', marginRight: 25 }}
-                    onPress={() => {navigation.navigate('Login');}}>Login with email
+                        onPress={() => { navigation.navigate('Login'); }}>Login with email
                     </Text>
                 </View>
             </TouchableWithoutFeedback>

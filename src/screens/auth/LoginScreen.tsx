@@ -5,15 +5,21 @@ import { Button } from 'react-native-elements/dist/buttons/Button';
 import {
     View, KeyboardAvoidingView,
     TextInput, StyleSheet, Text, Platform,
-    TouchableWithoutFeedback, Keyboard, Image, BackHandler
-} from 'react-native';
+    TouchableWithoutFeedback, Keyboard, Image} from 'react-native';
 import { Header, Overlay } from 'react-native-elements';
 import { colors } from './../../utils/theam.json';
-import { login, whoAmI } from '../../services/user/user.service';
+import { login, register, whoAmI } from '../../services/user/user.service';
 import { LoadingAnimation } from '../../components/loading.component';
 import { getToken, storeToken } from '../../services/commen/asyncStorage.service';
+import {
+    GoogleSignin,
+    statusCodes,
+} from '@react-native-google-signin/google-signin';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { providerTypes } from '../../services/user/user.interface';
 
-const LoginScreen = ({ userState, navigation, setUsers, setToken }: any) => {
+
+const LoginScreen = ({ navigation, setUsers, setToken }: any) => {
     const [email, onChangeEmail] = React.useState("");
     const [password, onChangePassword] = React.useState('');
     const [emailError, setEmailError] = React.useState('');
@@ -22,12 +28,6 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken }: any) => {
 
     React.useEffect(() => {
         loadUserFromToken();
-        const unsubscribe = BackHandler.addEventListener('hardwareBackPress', () => {
-            return true;
-        });
-        return () => {
-            unsubscribe
-        }
     }, [])
 
 
@@ -54,13 +54,7 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken }: any) => {
         if (email.length > 0 && password.length > 0) {
             setLoading(true);
             try {
-                const data = await login({ email, password });
-                // console.log(data.data.data.user);
-                setLoading(false);
-                setToken(data.data.data.token);
-                storeToken(data.data.data.token);
-                setUsers(data.data.data.user)
-                navigation.navigate('AllExams');
+                saveLoginDetails(email, password);
 
             } catch (error: any) {
                 if (error.response?.data?.message) {
@@ -75,6 +69,49 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken }: any) => {
 
             }
         }
+    }
+    const loginWithGoogle = async () => {
+        setLoading(true);
+        try {
+            await GoogleSignin.configure()
+            const Guser = await GoogleSignin.getCurrentUser()
+            if(Guser){
+                saveLoginDetails(Guser.user.email, Guser.user.id);
+            }else {
+
+                const userInfo = await GoogleSignin.signIn();
+                const dataset = {
+                    email: userInfo.user.email,
+                    username: userInfo.user.givenName,
+                    password: userInfo.user.id,
+                    provider: providerTypes.google
+                }
+                await register(dataset);
+                saveLoginDetails(userInfo.user.email, userInfo.user.id);  
+            }
+        } catch (error: any) {
+            setLoading(false);
+            console.log(error.code, 'eror');
+            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+                // user cancelled the login flow
+            } else if (error.code === statusCodes.IN_PROGRESS) {
+                // operation (e.g. sign in) is in progress already
+            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+                // play services not available or outdated
+            } else {
+                // some other error happened
+            }
+        }
+
+    }
+    const saveLoginDetails = async (email: string, password: string) => {
+        const data = await login({ email, password });
+        // console.log(data.data.data.user);
+        setToken(data.data.data.token);
+        storeToken(data.data.data.token);
+        setUsers(data.data.data.user)
+        setLoading(false);
+        navigation.navigate('AllExams');
     }
 
     return (
@@ -111,11 +148,13 @@ const LoginScreen = ({ userState, navigation, setUsers, setToken }: any) => {
                     <View>
                         <Button buttonStyle={styles.btnContainer} title="Login" onPress={() => onLoginPress()} />
                     </View>
-                    <View style={{ flexDirection: 'row', marginTop: 25, alignSelf: 'center' }}>
-                        <Text style={{ color: colors.main_color }}>Or Login with
-                        </Text>
-                        <Image source={require('./../../assets/logo/google.png')} style={{ alignSelf: 'center', marginLeft: 10 }} />
-                    </View>
+                    <TouchableOpacity onPress={loginWithGoogle}>
+                        <View style={{ flexDirection: 'row', marginTop: 25, alignSelf: 'center' }}>
+                            <Text style={{ color: colors.main_color }}>Or Login with
+                            </Text>
+                            <Image source={require('./../../assets/logo/google.png')} style={{ alignSelf: 'center', marginLeft: 10 }} />
+                        </View>
+                    </TouchableOpacity>
                     <Text style={{ color: colors.main_color, marginTop: 45, textAlign: 'right', marginRight: 25 }}
                         onPress={() => { navigation.navigate('SignUp'); }}
                     >Create an account

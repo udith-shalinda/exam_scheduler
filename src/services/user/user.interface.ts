@@ -3,7 +3,13 @@ export interface ILoginUser {
     password: string;
 }
 export interface ISignUpUser {
-    username: string;
+    username?: string| null;
     email: string;
     password: string;
+    provider?: providerTypes
 }
+
+export enum providerTypes {
+    "google" = "Google",
+    "email" = "Email",
+  }
