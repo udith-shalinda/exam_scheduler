@@ -81,7 +81,7 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
                         )
                     }
                 </ScrollView>}
-                {examState?.exams.length <= 0 && !loading && <View style={{ justifyContent: 'center', height: '100%', }}>
+                {examState?.exams.length <= 0 && !loading && <View style={{ justifyContent: 'center', flexGrow: 1 }}>
                     <EmptyAnimation message={"Examinations not found"} />
 
                 </View>}
