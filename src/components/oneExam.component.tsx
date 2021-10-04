@@ -4,7 +4,7 @@ import { Icon, Text } from "react-native-elements";
 import { colors } from './../utils/theam.json';
 
 
-export const OneExamComponent = ({ exam, onClick, onEdit, onDelete }: any) => {
+export const OneExamComponent = ({ exam, onClick, onEdit, onDelete, admin }: any) => {
     return (
         <View style={styles.card}>
             <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between' }} onPress={onClick}>
@@ -12,10 +12,10 @@ export const OneExamComponent = ({ exam, onClick, onEdit, onDelete }: any) => {
                     <Text style={{ fontSize: 14, color: colors.main_color }}>Id: {exam.id}</Text>
                     <Text style={{ fontSize: 18, fontWeight: 'bold', color: colors.main_color }}>Name: {exam.name}</Text>
                 </View>
-                <View>
+                {admin && <View>
                     <Icon name='edit' onPress={onEdit}></Icon>
                     <Icon name='delete' color={colors.error_msg} onPress={onDelete}></Icon>
-                </View>
+                </View>}
             </TouchableOpacity>
             {/* </Card> */}
         </View>

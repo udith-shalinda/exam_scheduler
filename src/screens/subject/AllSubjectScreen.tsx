@@ -90,6 +90,7 @@ const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
                                 subject={_subject}
                                 onDelete={() => { onDeleteSubject(_subject.id) }}
                                 onEdit={() => { navigation.navigate('UpdateSubject', _subject) }}
+                                admin={userRoleTypes.admin === userState.user.role ? true: false}
                             />)
                         )
                     }

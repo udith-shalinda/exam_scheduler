@@ -76,6 +76,7 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
                                 onDelete={() => { onDeleteExam(exam.id) }}
                                 onEdit={() => { navigation.navigate('UpdateExam', exam.id) }}
                                 onClick={() => { navigation.navigate('Tab', { screen: "TimeTable", params: { id: exam.id } }, exam.id) }}
+                                admin={userRoleTypes.admin === userState.user.role ? true: false}
                             />)
                         )
                     }
