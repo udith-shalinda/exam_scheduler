@@ -17,6 +17,7 @@ import { IExam } from '../../services/exam/exam.interface';
 import { loadHalls } from '../../services/hall/hall.service';
 import { generateTimeTableFromData, getAllTimeTableByExam } from '../../services/timetable/TimeTable.service';
 import { OneTimeTableComponent } from '../../components/oneTimeTable.component';
+import { userRoleTypes } from '../../services/user/user.interface';
 
 const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
     const [loading, setloading] = React.useState(false);
@@ -110,7 +111,7 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
                 {exam.length > 0 && <Text style={{ fontSize: 22, fontWeight: 'bold', color: colors.main_color, marginLeft: 25, marginTop: 20 }}> {'Exam: ' + exam}</Text>}
                 <View style={{ flexDirection: 'row', alignSelf: 'flex-end' }}>
                     <View>
-                        {!timeTableGenerated && <Button buttonStyle={styles.btnContainer} title="Genarate Time Table" onPress={() => { generateTimeTable() }} />}
+                        {!timeTableGenerated && userState?.user?.role === userRoleTypes.admin && <Button buttonStyle={styles.btnContainer} title="Genarate Time Table" onPress={() => { generateTimeTable() }} />}
                     </View>
                     {/* <View >
                         <Button buttonStyle={styles.btnContainer} title="All Subjects" onPress={() => { navigation.navigate('AllSubjects', examId) }} />

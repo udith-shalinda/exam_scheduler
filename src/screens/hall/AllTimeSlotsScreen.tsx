@@ -16,6 +16,7 @@ import { deleteHall, loadHalls } from '../../services/hall/hall.service';
 import { OneHallComponent } from '../../components/onehall.component';
 import { ITimeSlot } from '../../services/hall/hall.interface';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
+import { userRoleTypes } from '../../services/user/user.interface';
 
 const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) => {
     const [loading, setloading] = React.useState(false);
@@ -95,7 +96,7 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
                     <EmptyAnimation message={"timeSlots not found"} />
                 </View>}
             </View>
-            <View style={{ position: 'absolute', flexDirection: 'column', justifyContent: 'flex-end', right: 10, height: '100%', bottom: 10 }}>
+            {userState?.user?.role === userRoleTypes.admin && <View style={{ position: 'absolute', flexDirection: 'column', justifyContent: 'flex-end', right: 10, height: '100%', bottom: 10 }}>
                 <Button
                     onPress={() => { navigation.navigate('AddTimeSlots', examId)}}
                     buttonStyle={{ backgroundColor: colors.main_color, width: 50, height: 50, borderRadius: 50 }}
@@ -103,7 +104,7 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
                         <Icon name="plus" type="font-awesome-5" style={{ alignSelf: 'flex-end' }} color={colors.secondary_color} size={20}></Icon>
                     }
                 />
-            </View>
+            </View>}
         </View>
 
     );

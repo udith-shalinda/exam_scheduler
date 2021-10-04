@@ -17,6 +17,7 @@ import { ISubject } from '../../services/subject/subject.interface';
 import { OneSubjectComponent } from '../../components/oneSubject.component';
 import { IExam } from '../../services/exam/exam.interface';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
+import { userRoleTypes } from '../../services/user/user.interface';
 
 const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
     const [loading, setloading] = React.useState(false);
@@ -97,7 +98,7 @@ const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
                     <EmptyAnimation message={"Subjects not found"} />
                 </View>}
             </View>
-            <View style={{ position: 'absolute', flexDirection: 'column', justifyContent: 'flex-end', right: 10, height: '100%', bottom: 10 }}>
+            {userState?.user?.role === userRoleTypes.admin && <View style={{ position: 'absolute', flexDirection: 'column', justifyContent: 'flex-end', right: 10, height: '100%', bottom: 10 }}>
                 <Button
                     onPress={() => { navigation.navigate('AddSubject', examId) }}
                     buttonStyle={{ backgroundColor: colors.main_color, width: 50, height: 50, borderRadius: 50 }}
@@ -105,7 +106,7 @@ const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
                         <Icon name="plus" type="font-awesome-5" style={{ alignSelf: 'flex-end' }} color={colors.secondary_color} size={20}></Icon>
                     }
                 />
-            </View>
+            </View>}
         </View>
 
     );
