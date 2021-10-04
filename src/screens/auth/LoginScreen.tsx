@@ -55,7 +55,6 @@ const LoginScreen = ({ navigation, setUsers, setToken }: any) => {
             setLoading(true);
             try {
                 saveLoginDetails(email, password);
-
             } catch (error: any) {
                 if (error.response?.data?.message) {
                     if ((error.response.data.message).search('Email') !== -1) {
@@ -105,13 +104,19 @@ const LoginScreen = ({ navigation, setUsers, setToken }: any) => {
 
     }
     const saveLoginDetails = async (email: string, password: string) => {
-        const data = await login({ email, password });
-        // console.log(data.data.data.user);
-        setToken(data.data.data.token);
-        storeToken(data.data.data.token);
-        setUsers(data.data.data.user)
-        setLoading(false);
-        navigation.navigate('AllExams');
+        try {
+            const data = await login({ email, password });
+            // console.log(data.data.data.user);
+            setToken(data.data.data.token);
+            storeToken(data.data.data.token);
+            setUsers(data.data.data.user)
+            setLoading(false);
+            navigation.navigate('AllExams');
+        } catch (error) {
+            setLoading(false);
+            // TODO provide a alert
+            console.log(error);
+        }
     }
 
     return (

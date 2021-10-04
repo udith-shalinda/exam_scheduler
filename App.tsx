@@ -39,11 +39,11 @@ export const store = createStore(reducers);
 function App() {
 
   React.useEffect(() => {
-    messaging()
-    .getToken()
-    .then(token => {
-      console.log(token);
-    });
+    // messaging()
+    // .getToken()
+    // .then(token => {
+    //   console.log(token);
+    // });
 
     const unsubscribe = messaging().onMessage(async (remoteMessage: any) => {
       // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
