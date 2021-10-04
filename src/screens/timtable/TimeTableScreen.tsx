@@ -127,7 +127,7 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
                         )
                     }
                 </ScrollView>}
-                {timeTable.length <= 0 && !loading && <View style={{ justifyContent: 'center' }}>
+                {timeTable.length <= 0 && !loading && <View style={{ justifyContent: 'center', flexGrow: 1}}>
                     <EmptyAnimation message={"Time table not found"} />
                 </View>}
             </View>
@@ -145,9 +145,10 @@ const styles = StyleSheet.create({
         // paddingTop: '20%',
         // padding: 24,
         // flex: 1,
+        flexGrow: 1,
         backgroundColor: colors.secondary_color,
         // justifyContent: "center"
-        minHeight: "100%",
+        // minHeight: "100%",
     },
     btnContainer: {
         backgroundColor: colors.main_color,

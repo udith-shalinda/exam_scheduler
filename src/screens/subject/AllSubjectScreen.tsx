@@ -82,7 +82,7 @@ const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
                         <Button buttonStyle={styles.btnContainer} title="All Time Slots" onPress={() => { navigation.navigate('AllTimeSlots', examId) }} />
                     </View> */}
                 </View>
-                {subjects && subjects.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, minHeight: '100%', marginTop: '1%' }}>
+                {subjects && subjects.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, marginTop: '1%' }}>
                     {
                         (subjects).map((_subject: ISubject) => (
                             <OneSubjectComponent
@@ -95,7 +95,7 @@ const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
                         )
                     }
                 </ScrollView>}
-                {subjects.length <= 0 && !loading && <View style={{ justifyContent: 'center', height: '100%', }}>
+                {subjects.length <= 0 && !loading && <View style={{ justifyContent: 'center', flexGrow: 1 }}>
                     <EmptyAnimation message={"Subjects not found"} />
                 </View>}
             </View>
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     inner: {
         // paddingTop: '20%',
         // padding: 24,
-        // flex: 1,50
+        flexGrow: 1,
         backgroundColor: colors.secondary_color,
         // justifyContent: "center"
         // minHeight: "70%",

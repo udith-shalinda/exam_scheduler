@@ -93,7 +93,7 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
                     }
                 </ScrollView>}
                 {/* </ScrollView> */}
-                {timeSlots.length <= 0 && !loading && <View style={{ justifyContent: 'center' }}>
+                {timeSlots.length <= 0 && !loading && <View style={{ justifyContent: 'center', flexGrow: 1 }}>
                     <EmptyAnimation message={"timeSlots not found"} />
                 </View>}
             </View>
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     inners: {
         // paddingTop: '20%',
         // padding: 24,
-        // flex: 1,
+        flexGrow: 1,
         backgroundColor: colors.secondary_color,
         // justifyContent: "center"
         // height: "90%",
