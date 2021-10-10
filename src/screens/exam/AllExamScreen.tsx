@@ -66,7 +66,9 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
                 {loading && <Overlay isVisible={loading} overlayStyle={{ backgroundColor: colors.secondary_color }}>
                     <LoadingAnimation width={100} height={100} />
                 </Overlay>}
-                {examState.exams && examState.exams.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, flexGrow: 0, marginTop: '10%' }} >
+                {examState.exams && examState.exams.length > 0 &&
+                <View style={{ backgroundColor: colors.secondary_color, marginTop: '10%', flexGrow: 1, height: '10%' }}> 
+                    <ScrollView >
                     {
 
                         (examState.exams).map((exam: IExam) => (
@@ -80,7 +82,9 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
                             />)
                         )
                     }
-                </ScrollView>}
+                    </ScrollView>
+                </View>
+                }
                 {examState?.exams.length <= 0 && !loading && <View style={{ justifyContent: 'center', flexGrow: 1 }}>
                     <EmptyAnimation message={"Examinations not found"} />
 
@@ -90,21 +94,17 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
                         onPress={() => { navigation.navigate('AddExam') }}
                         buttonStyle={{ backgroundColor: colors.main_color, width: 50, height: 50, borderRadius: 50 }}
                         icon={
-                            <Icon name="plus" type="font-awesome-5" style={{ alignSelf: 'flex-end' }} color={colors.secondary_color} size={20}></Icon>
+                            <Icon name="plus" type="font-awesome-5" style={{ alignSelf: 'flex-end' }} color={colors.secondary_color} size={14}></Icon>
                         }
                     />
                 </View>}
             </View>
         </View>
-
     );
 }
 
 
 const styles = StyleSheet.create({
-    container: {
-        // flex: 1
-    },
     inner: {
         // paddingTop: '20%',
         // padding: 24,

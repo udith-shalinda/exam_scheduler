@@ -102,7 +102,7 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
                     onPress={() => { navigation.navigate('AddTimeSlots', examId) }}
                     buttonStyle={{ backgroundColor: colors.main_color, width: 50, height: 50, borderRadius: 50 }}
                     icon={
-                        <Icon name="plus" type="font-awesome-5" style={{ alignSelf: 'flex-end' }} color={colors.secondary_color} size={20}></Icon>
+                        <Icon name="plus" type="font-awesome-5" style={{ alignSelf: 'flex-end' }} color={colors.secondary_color} size={14}></Icon>
                     }
                 />
             </View>}
