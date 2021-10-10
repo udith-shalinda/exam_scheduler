@@ -18,6 +18,7 @@ import { loadHalls } from '../../services/hall/hall.service';
 import { generateTimeTableFromData, getAllTimeTableByExam } from '../../services/timetable/TimeTable.service';
 import { OneTimeTableComponent } from '../../components/oneTimeTable.component';
 import { userRoleTypes } from '../../services/user/user.interface';
+import { errorMessageType } from '../../components/error.component';
 
 const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
     const [loading, setloading] = React.useState(false);
@@ -28,6 +29,7 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
     const [subjects, setSubjects] = React.useState<ISubject[]>([]);
     const [timeSlots, settimeSlots] = React.useState([]);
     const [timeTableGenerated, settimeTableGenerated] = React.useState(true)
+    const [isError, setIsError] = React.useState<errorMessageType>({isVisible: false, message: '', onOkay: ()=>{}})
 
 
 
