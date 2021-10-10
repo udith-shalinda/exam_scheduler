@@ -16,6 +16,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { SelectDateComponent } from '../../components/selectDate.component';
 import { SelectTimeComponent } from '../../components/selectTime.component';
 import { addHall } from '../../services/hall/hall.service';
+import { ErrorAnimation, errorMessageType } from '../../components/error.component';
 
 const EditTimeSlotScreen = ({ userState, navigation, examState, route }: any) => {
     const [timeSlot, onChangetimeSlot] = React.useState<IHall>({
@@ -34,6 +35,7 @@ const EditTimeSlotScreen = ({ userState, navigation, examState, route }: any) =>
     const [visibleDate, setvisibleDate] = React.useState({state: false, index: 0});
 
     const [av_dates, setAv_dates] = React.useState<IAv_Date[]>([])
+    const [isError, setIsError] = React.useState<errorMessageType>({isVisible: false, message: '', onOkay: ()=>{}})
 
 
 
@@ -138,6 +140,7 @@ const EditTimeSlotScreen = ({ userState, navigation, examState, route }: any) =>
         } catch (error: any) {
             console.log(error.response?.data?.message);
             setLoading(false);
+            setIsError({isVisible: true, message: 'Edit TimeSlot failed', onOkay: ()=> {setIsError({...error, isVisible: false})}})
 
         }
     }
@@ -157,6 +160,8 @@ const EditTimeSlotScreen = ({ userState, navigation, examState, route }: any) =>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <ScrollView>
                     <View style={styles.inner}>
+                    {(isError.isVisible && !loading) && 
+                    <ErrorAnimation errorMsg={isError}/>}
                         {loading && <Overlay isVisible={loading} overlayStyle={{ backgroundColor: colors.secondary_color }}>
                             <LoadingAnimation />
                         </Overlay>}

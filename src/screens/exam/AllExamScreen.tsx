@@ -18,9 +18,11 @@ import { LoadingAnimation } from '../../components/loading.component';
 import { Button } from 'react-native-elements/dist/buttons/Button';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import { userRoleTypes } from '../../services/user/user.interface';
+import { ErrorAnimation, errorMessageType } from '../../components/error.component';
 
 const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteExam }: any) => {
     const [loading, setloading] = React.useState(false);
+    const [isError, setIsError] = React.useState<errorMessageType>({isVisible: false, message: '', onOkay: ()=>{}})
 
     useEffect(() => {
         getAllExams();
@@ -37,6 +39,7 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
         } catch (error: any) {
             console.log(error.response.data);
             setloading(false);
+            setIsError({isVisible: true, message: 'Loading Exam failed', onOkay: ()=> {setIsError({...error, isVisible: false})}})
         }
     }
     const onDeleteExam = async (id: number) => {
@@ -50,6 +53,7 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
         } catch (error: any) {
             console.log(error.response.data);
             setloading(false);
+            setIsError({isVisible: true, message: 'Delete Exam failed', onOkay: ()=> {setIsError({...error, isVisible: false})}})
         }
     }
 
@@ -63,6 +67,8 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
                 backgroundColor={colors.main_color}
             />
             <View style={styles.inner}>
+            {(isError.isVisible && !loading) && 
+                    <ErrorAnimation errorMsg={isError}/>}
                 {loading && <Overlay isVisible={loading} overlayStyle={{ backgroundColor: colors.secondary_color }}>
                     <LoadingAnimation width={100} height={100} />
                 </Overlay>}

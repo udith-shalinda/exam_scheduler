@@ -17,6 +17,7 @@ import {
 } from '@react-native-google-signin/google-signin';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { providerTypes } from '../../services/user/user.interface';
+import { ErrorAnimation, errorMessageType } from '../../components/error.component';
 
 
 const LoginScreen = ({ navigation, setUsers, setToken }: any) => {
@@ -25,6 +26,7 @@ const LoginScreen = ({ navigation, setUsers, setToken }: any) => {
     const [emailError, setEmailError] = React.useState('');
     const [PasswordError, setPasswordError] = React.useState('');
     const [loading, setLoading] = React.useState(false);
+    const [isError, setIsError] = React.useState<errorMessageType>({isVisible: false, message: '', onOkay: ()=>{}})
 
     React.useEffect(() => {
         loadUserFromToken();
@@ -56,6 +58,7 @@ const LoginScreen = ({ navigation, setUsers, setToken }: any) => {
             try {
                 saveLoginDetails(email, password);
             } catch (error: any) {
+                console.log(error.response.data.message);
                 if (error.response?.data?.message) {
                     if ((error.response.data.message).search('Email') !== -1) {
                         setEmailError(error.response.data.message);
@@ -90,7 +93,8 @@ const LoginScreen = ({ navigation, setUsers, setToken }: any) => {
             }
         } catch (error: any) {
             setLoading(false);
-            console.log(error.code, 'eror');
+            setIsError({isVisible: true, message: 'Login with google failed. Please try again', onOkay: ()=> {setIsError({...error, isVisible: false})}})
+            // console.log(error.code, 'eror');
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
                 // user cancelled the login flow
             } else if (error.code === statusCodes.IN_PROGRESS) {
@@ -112,10 +116,10 @@ const LoginScreen = ({ navigation, setUsers, setToken }: any) => {
             setUsers(data.data.data.user)
             setLoading(false);
             navigation.navigate('AllExams');
-        } catch (error) {
+        } catch (error: any) {
             setLoading(false);
-            // TODO provide a alert
-            console.log(error);
+            setIsError({isVisible: true, message: 'Login failed. Please try again', onOkay: ()=> {setIsError({...error, isVisible: false})}})
+            // console.log(error.response.data.message);
         }
     }
 
@@ -133,6 +137,8 @@ const LoginScreen = ({ navigation, setUsers, setToken }: any) => {
             />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.inner}>
+                {(isError.isVisible && !loading) && 
+                    <ErrorAnimation errorMsg={isError}/>}
                     {loading && <Overlay isVisible={loading} overlayStyle={{ backgroundColor: colors.secondary_color }}>
                         <LoadingAnimation width={100} height={100} />
                     </Overlay>}

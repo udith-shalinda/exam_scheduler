@@ -13,6 +13,7 @@ import { login, register } from '../../services/user/user.service';
 import { LoadingAnimation } from '../../components/loading.component';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { storeToken } from '../../services/commen/asyncStorage.service';
+import { ErrorAnimation, errorMessageType } from '../../components/error.component';
 
 const RegisterScreen = ({ userState, navigation, setUsers, setToken }: any) => {
     const [email, onChangeEmail] = React.useState("");
@@ -27,6 +28,7 @@ const RegisterScreen = ({ userState, navigation, setUsers, setToken }: any) => {
     });
 
     const [loading, setLoading] = React.useState(false);
+    const [isError, setIsError] = React.useState<errorMessageType>({isVisible: false, message: '', onOkay: ()=>{}})
 
     const onSignUpPress = async () => {
         if (password !== confirmpassword) {
@@ -85,6 +87,8 @@ const RegisterScreen = ({ userState, navigation, setUsers, setToken }: any) => {
                             ...errorMessages,
                             userName: error.response.data.message
                         });
+                }else{
+                    setIsError({isVisible: true, message: 'Login failed. Please try again', onOkay: ()=> {setIsError({...error, isVisible: false})}})
                 }
 
             }
@@ -119,6 +123,7 @@ const RegisterScreen = ({ userState, navigation, setUsers, setToken }: any) => {
             }
         } catch (error: any) {
             setLoading(false);
+            setIsError({isVisible: true, message: 'Login with google failed. Please try again', onOkay: ()=> {setIsError({...error, isVisible: false})}})
             console.log(error.code);
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
                 // user cancelled the login flow
@@ -156,6 +161,8 @@ const RegisterScreen = ({ userState, navigation, setUsers, setToken }: any) => {
             />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.inner}>
+                {(isError.isVisible && !loading) && 
+                    <ErrorAnimation errorMsg={isError}/>}
                     {loading && <Overlay isVisible={loading} overlayStyle={{ backgroundColor: colors.secondary_color }}>
                         <LoadingAnimation />
                     </Overlay>}

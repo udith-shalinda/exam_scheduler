@@ -12,12 +12,14 @@ import { updateExam } from '../../services/exam/exam.service';
 import { IExam } from '../../services/exam/exam.interface';
 import { A_updateExam } from '../../redux/exam/exam.action';
 import { LoadingAnimation } from '../../components/loading.component';
+import { ErrorAnimation, errorMessageType } from '../../components/error.component';
 
 const EditExamScreen = ({ userState, examState, navigation, a_editExam, route }: any) => {
     const [exam, onChangeExam] = React.useState("");
     const [examError, setExamError] = React.useState('');
     const [loading, setLoading] = React.useState(false);
     const [examId, setExamId] = React.useState(0);
+    const [isError, setIsError] = React.useState<errorMessageType>({isVisible: false, message: '', onOkay: ()=>{}})
 
     React.useEffect(() => {
         if(!userState.token && route?.params){
@@ -48,7 +50,7 @@ const EditExamScreen = ({ userState, examState, navigation, a_editExam, route }:
                     }
                 }
                 setLoading(false);
-
+                setIsError({isVisible: true, message: 'Edit Exam failed', onOkay: ()=> {setIsError({...error, isVisible: false})}})
             }
         }else{
             setExamError('Name cannot be empty');
@@ -69,6 +71,8 @@ const EditExamScreen = ({ userState, examState, navigation, a_editExam, route }:
             />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.inner}>
+                {(isError.isVisible && !loading) && 
+                    <ErrorAnimation errorMsg={isError}/>}
                     {loading && <Overlay isVisible={loading} overlayStyle={{backgroundColor: colors.secondary_color}}>
                         <LoadingAnimation/>
                     </Overlay>}

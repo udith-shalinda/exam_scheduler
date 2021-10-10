@@ -12,11 +12,13 @@ import { addExam } from '../../services/exam/exam.service';
 import { IExam } from '../../services/exam/exam.interface';
 import { A_addExam } from '../../redux/exam/exam.action';
 import { LoadingAnimation } from '../../components/loading.component';
+import { ErrorAnimation, errorMessageType } from '../../components/error.component';
 
 const AddExamScreen = ({ userState, navigation, a_addExam }: any) => {
     const [exam, onChangeExam] = React.useState("");
     const [examError, setExamError] = React.useState('');
     const [loading, setLoading] = React.useState(false);
+    const [isError, setIsError] = React.useState<errorMessageType>({isVisible: false, message: '', onOkay: ()=>{}})
 
     React.useEffect(() => {
         if(!userState.token){
@@ -42,6 +44,7 @@ const AddExamScreen = ({ userState, navigation, a_addExam }: any) => {
                     }
                 }
                 setLoading(false);
+                setIsError({isVisible: true, message: 'Adding Exam failed', onOkay: ()=> {setIsError({...error, isVisible: false})}})
 
             }
         }else{
@@ -63,6 +66,8 @@ const AddExamScreen = ({ userState, navigation, a_addExam }: any) => {
             />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.inner}>
+                {(isError.isVisible && !loading) && 
+                    <ErrorAnimation errorMsg={isError}/>}
                     {loading && <Overlay isVisible={loading} overlayStyle={{backgroundColor: colors.secondary_color}}>
                         <LoadingAnimation />
                     </Overlay>}

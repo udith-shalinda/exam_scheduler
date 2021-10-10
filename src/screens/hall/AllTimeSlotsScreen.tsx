@@ -17,12 +17,14 @@ import { OneHallComponent } from '../../components/onehall.component';
 import { ITimeSlot } from '../../services/hall/hall.interface';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import { userRoleTypes } from '../../services/user/user.interface';
+import { ErrorAnimation, errorMessageType } from '../../components/error.component';
 
 const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) => {
     const [loading, setloading] = React.useState(false);
     const [examId, setExamId] = React.useState(route?.params.id);
     const [exam, setExam] = React.useState('');
     const [timeSlots, settimeSlots] = React.useState([]);
+    const [isError, setIsError] = React.useState<errorMessageType>({isVisible: false, message: '', onOkay: ()=>{}})
 
     useEffect(() => {
         const data = examState.exams.find((res: IExam) => res.id === route?.params.id)
@@ -42,6 +44,7 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
         } catch (error: any) {
             console.log(error.response.data);
             setloading(false);
+            setIsError({isVisible: true, message: 'Loading TimeSlot failed', onOkay: ()=> {setIsError({...error, isVisible: false})}})
         }
     }
     const onDeleteSubject = async (id: number) => {
@@ -56,6 +59,7 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
         } catch (error: any) {
             console.log(error.response.data);
             setloading(false);
+            setIsError({isVisible: true, message: 'Delete TimeSlot failed', onOkay: ()=> {setIsError({...error, isVisible: false})}})
         }
     }
 
@@ -69,6 +73,8 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
                 backgroundColor={colors.main_color}
             />
             <View style={styles.inners}>
+                {(isError.isVisible && !loading) && 
+                    <ErrorAnimation errorMsg={isError}/>}
                 {loading && <Overlay isVisible={loading} overlayStyle={{ backgroundColor: colors.secondary_color }}>
                     <LoadingAnimation width={100} height={100} />
                 </Overlay>}
