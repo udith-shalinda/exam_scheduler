@@ -19,8 +19,9 @@ import { Button } from 'react-native-elements/dist/buttons/Button';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import { userRoleTypes } from '../../services/user/user.interface';
 import { ErrorAnimation, errorMessageType } from '../../components/error.component';
+import { storeToken } from '../../services/commen/asyncStorage.service';
 
-const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteExam }: any) => {
+const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteExam, setUsers, setToken }: any) => {
     const [loading, setloading] = React.useState(false);
     const [isError, setIsError] = React.useState<errorMessageType>({isVisible: false, message: '', onOkay: ()=>{}})
 
@@ -56,15 +57,24 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
             setIsError({isVisible: true, message: 'Delete Exam failed', onOkay: ()=> {setIsError({...error, isVisible: false})}})
         }
     }
+    const logOut = () => {
+        setToken(null);
+        setUsers(null);
+        storeToken('');
+        navigation.navigate('AllExams');
+    }
 
     return (
 
         <View style={{ height: '100%' }}>
             <Header
-                // leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
+                // leftComponent={<Icon type="font-awesome-5" name="angle-left" size={23} color={colors.secondary_color} onPress={()=> {navigation.goBack()}}></Icon>}
                 centerComponent={{ text: 'All Exams', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
-                // rightComponent={{ icon: 'home', color: '#fff' }}
-                backgroundColor={colors.main_color}
+                rightComponent={<Icon type="font-awesome-5" name="sign-out-alt" size={18} color={colors.secondary_color} onPress={()=> {logOut()}}></Icon>}
+                backgroundColor={colors.dark_main_color}
+                containerStyle={{
+                    backgroundColor: colors.main_color
+                }}
             />
             <View style={styles.inner}>
             {(isError.isVisible && !loading) && 
@@ -84,7 +94,7 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
                                 onDelete={() => { onDeleteExam(exam.id) }}
                                 onEdit={() => { navigation.navigate('UpdateExam', exam.id) }}
                                 onClick={() => { navigation.navigate('Tab', { screen: "TimeTable", params: { id: exam.id } }, exam.id) }}
-                                admin={userRoleTypes.admin === userState.user.role ? true: false}
+                                admin={userRoleTypes.admin === userState?.user?.role ? true: false}
                             />)
                         )
                     }
@@ -130,6 +140,13 @@ const mapDispatchToProps = (dispatch: any) => ({
     },
     a_deleteExam: (id: number) => {
         dispatch(A_deleteExam(id));
+    },
+    setUsers: (user: IUser) => {
+        dispatch(setUser(user));
+
+    },
+    setToken: (token: string) => {
+        dispatch(setUserToken(token));
     }
 })
 
