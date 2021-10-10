@@ -14,6 +14,7 @@ import { LoadingAnimation } from '../../components/loading.component';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { storeToken } from '../../services/commen/asyncStorage.service';
 import { ErrorAnimation, errorMessageType } from '../../components/error.component';
+import { providerTypes } from '../../services/user/user.interface';
 
 const RegisterScreen = ({ userState, navigation, setUsers, setToken }: any) => {
     const [email, onChangeEmail] = React.useState("");
@@ -116,7 +117,8 @@ const RegisterScreen = ({ userState, navigation, setUsers, setToken }: any) => {
                 const dataset = {
                     email: userInfo.user.email,
                     username: userInfo.user.givenName,
-                    password: userInfo.user.id
+                    password: userInfo.user.id,
+                    role: providerTypes.google
                 }
                 await register(dataset);
                 saveLoginDetails(userInfo.user.email, userInfo.user.id);
