@@ -13,6 +13,7 @@ import { IExam } from '../../services/exam/exam.interface';
 import { A_updateExam } from '../../redux/exam/exam.action';
 import { LoadingAnimation } from '../../components/loading.component';
 import { ErrorAnimation, errorMessageType } from '../../components/error.component';
+import { ToolBarHeader } from '../../components/Header.component';
 
 const EditExamScreen = ({ userState, examState, navigation, a_editExam, route }: any) => {
     const [exam, onChangeExam] = React.useState("");
@@ -63,11 +64,13 @@ const EditExamScreen = ({ userState, examState, navigation, a_editExam, route }:
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={styles.container}
         >
-            <Header
-                // leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
-                centerComponent={{ text: 'Upate Exam', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
-                // rightComponent={{ icon: 'home', color: '#fff' }}
-                backgroundColor={colors.main_color}
+            <ToolBarHeader
+                title={"Update Exams"} 
+                // setUsers={setUsers} 
+                // setToken={setToken}
+                navigation={navigation}
+                isLogoutAv={false}
+                isBackAv={true}
             />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.inner}>

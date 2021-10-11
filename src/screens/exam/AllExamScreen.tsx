@@ -20,6 +20,7 @@ import { Icon } from 'react-native-elements/dist/icons/Icon';
 import { userRoleTypes } from '../../services/user/user.interface';
 import { ErrorAnimation, errorMessageType } from '../../components/error.component';
 import { storeToken } from '../../services/commen/asyncStorage.service';
+import { ToolBarHeader } from '../../components/Header.component';
 
 const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteExam, setUsers, setToken }: any) => {
     const [loading, setloading] = React.useState(false);
@@ -67,14 +68,13 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
     return (
 
         <View style={{ height: '100%' }}>
-            <Header
-                // leftComponent={<Icon type="font-awesome-5" name="angle-left" size={23} color={colors.secondary_color} onPress={()=> {navigation.goBack()}}></Icon>}
-                centerComponent={{ text: 'All Exams', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
-                rightComponent={<Icon type="font-awesome-5" name="sign-out-alt" size={18} color={colors.secondary_color} onPress={()=> {logOut()}}></Icon>}
-                backgroundColor={colors.dark_main_color}
-                containerStyle={{
-                    backgroundColor: colors.main_color
-                }}
+            <ToolBarHeader
+                title={"All Exams"} 
+                setUsers={setUsers} 
+                setToken={setToken}
+                navigation={navigation}
+                isLogoutAv={true}
+                isBackAv={false}
             />
             <View style={styles.inner}>
             {(isError.isVisible && !loading) && 

@@ -18,6 +18,7 @@ import { ITimeSlot } from '../../services/hall/hall.interface';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import { userRoleTypes } from '../../services/user/user.interface';
 import { ErrorAnimation, errorMessageType } from '../../components/error.component';
+import { ToolBarHeader } from '../../components/Header.component';
 
 const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) => {
     const [loading, setloading] = React.useState(false);
@@ -66,11 +67,13 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
     return (
 
         <View style={{ height: '100%', backgroundColor: colors.secondary_color }}>
-            <Header
-                // leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
-                centerComponent={{ text: 'All Time slots', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
-                // rightComponent={{ icon: 'home', color: '#fff' }}
-                backgroundColor={colors.main_color}
+            <ToolBarHeader
+                title={"All Time Slots"} 
+                // setUsers={setUsers} 
+                // setToken={setToken}
+                navigation={navigation}
+                isLogoutAv={false}
+                isBackAv={true}
             />
             <View style={styles.inners}>
                 {(isError.isVisible && !loading) && 

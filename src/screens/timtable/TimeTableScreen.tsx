@@ -19,6 +19,7 @@ import { generateTimeTableFromData, getAllTimeTableByExam } from '../../services
 import { OneTimeTableComponent } from '../../components/oneTimeTable.component';
 import { userRoleTypes } from '../../services/user/user.interface';
 import { errorMessageType } from '../../components/error.component';
+import { ToolBarHeader } from '../../components/Header.component';
 
 const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
     const [loading, setloading] = React.useState(false);
@@ -100,11 +101,13 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
     return (
 
         <View style={{ height: '100%' }}>
-            <Header
-                // leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
-                centerComponent={{ text: 'Time Table', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
-                // rightComponent={{ icon: 'home', color: '#fff' }}
-                backgroundColor={colors.main_color}
+            <ToolBarHeader
+                title={"Time Table"} 
+                // setUsers={setUsers} 
+                // setToken={setToken}
+                navigation={navigation}
+                isLogoutAv={false}
+                isBackAv={true}
             />
             <View style={styles.inner}>
                 {loading && <Overlay isVisible={loading} overlayStyle={{ backgroundColor: colors.secondary_color }}>

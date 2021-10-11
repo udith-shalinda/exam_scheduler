@@ -14,6 +14,7 @@ import { LoadingAnimation } from '../../components/loading.component';
 import { addSubject, updateSubject } from '../../services/subject/subject.service';
 import { ICreateSubject, ISubject } from '../../services/subject/subject.interface';
 import { ErrorAnimation, errorMessageType } from '../../components/error.component';
+import { ToolBarHeader } from '../../components/Header.component';
 
 const AddSubjectScreen = ({ userState, navigation, examState, route }: any) => {
     const [subject, onChangeSubject] = React.useState<ISubject>({
@@ -89,11 +90,13 @@ const AddSubjectScreen = ({ userState, navigation, examState, route }: any) => {
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={styles.container}
         >
-            <Header
-                // leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
-                centerComponent={{ text: 'Update Subject', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
-                // rightComponent={{ icon: 'home', color: '#fff' }}
-                backgroundColor={colors.main_color}
+            <ToolBarHeader
+                title={"Edit Subject"} 
+                // setUsers={setUsers} 
+                // setToken={setToken}
+                navigation={navigation}
+                isLogoutAv={false}
+                isBackAv={true}
             />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.inner}>

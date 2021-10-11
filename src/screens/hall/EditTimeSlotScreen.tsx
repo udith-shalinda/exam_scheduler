@@ -17,6 +17,7 @@ import { SelectDateComponent } from '../../components/selectDate.component';
 import { SelectTimeComponent } from '../../components/selectTime.component';
 import { addHall } from '../../services/hall/hall.service';
 import { ErrorAnimation, errorMessageType } from '../../components/error.component';
+import { ToolBarHeader } from '../../components/Header.component';
 
 const EditTimeSlotScreen = ({ userState, navigation, examState, route }: any) => {
     const [timeSlot, onChangetimeSlot] = React.useState<IHall>({
@@ -151,11 +152,13 @@ const EditTimeSlotScreen = ({ userState, navigation, examState, route }: any) =>
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={styles.container}
         >
-            <Header
-                // leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
-                centerComponent={{ text: 'Edit Time Slot', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
-                // rightComponent={{ icon: 'home', color: '#fff' }}
-                backgroundColor={colors.main_color}
+            <ToolBarHeader
+                title={"Edit Time Slot"} 
+                // setUsers={setUsers} 
+                // setToken={setToken}
+                navigation={navigation}
+                isLogoutAv={false}
+                isBackAv={true}
             />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <ScrollView>
