@@ -13,6 +13,8 @@ import { A_addExam } from '../../redux/exam/exam.action';
 import { LoadingAnimation } from '../../components/loading.component';
 import { addSubject, updateSubject } from '../../services/subject/subject.service';
 import { ICreateSubject, ISubject } from '../../services/subject/subject.interface';
+import { ErrorAnimation, errorMessageType } from '../../components/error.component';
+import { ToolBarHeader } from '../../components/Header.component';
 
 const AddSubjectScreen = ({ userState, navigation, examState, route }: any) => {
     const [subject, onChangeSubject] = React.useState<ISubject>({
@@ -31,6 +33,7 @@ const AddSubjectScreen = ({ userState, navigation, examState, route }: any) => {
         repeatedYears: ''
     });
     const [loading, setLoading] = React.useState(false);
+    const [isError, setIsError] = React.useState<errorMessageType>({isVisible: false, message: '', onOkay: ()=>{}})
 
     React.useEffect(() => {
         if (!userState.token) {
@@ -77,7 +80,7 @@ const AddSubjectScreen = ({ userState, navigation, examState, route }: any) => {
         } catch (error: any) {
             console.log(error.response?.data?.message);
             setLoading(false);
-
+            setIsError({isVisible: true, message: 'Updating Subject failed', onOkay: ()=> {setIsError({...error, isVisible: false})}})
         }
     }
 
@@ -87,14 +90,18 @@ const AddSubjectScreen = ({ userState, navigation, examState, route }: any) => {
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={styles.container}
         >
-            <Header
-                // leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
-                centerComponent={{ text: 'Update Subject', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
-                // rightComponent={{ icon: 'home', color: '#fff' }}
-                backgroundColor={colors.main_color}
+            <ToolBarHeader
+                title={"Edit Subject"} 
+                // setUsers={setUsers} 
+                // setToken={setToken}
+                navigation={navigation}
+                isLogoutAv={false}
+                isBackAv={true}
             />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.inner}>
+                {(isError.isVisible && !loading) && 
+                    <ErrorAnimation errorMsg={isError}/>}
                     {loading && <Overlay isVisible={loading} overlayStyle={{ backgroundColor: colors.secondary_color }}>
                         <LoadingAnimation />
                     </Overlay>}

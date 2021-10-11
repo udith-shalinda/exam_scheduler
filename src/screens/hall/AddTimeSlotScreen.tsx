@@ -16,6 +16,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { SelectDateComponent } from '../../components/selectDate.component';
 import { SelectTimeComponent } from '../../components/selectTime.component';
 import { addHall } from '../../services/hall/hall.service';
+import { ErrorAnimation, errorMessageType } from '../../components/error.component';
+import { ToolBarHeader } from '../../components/Header.component';
 
 const AddTimeSlotScreen = ({ userState, navigation, examState, route }: any) => {
     const [timeSlot, onChangetimeSlot] = React.useState<IHall>({
@@ -34,6 +36,7 @@ const AddTimeSlotScreen = ({ userState, navigation, examState, route }: any) => 
     const [visibleDate, setvisibleDate] = React.useState({state: false, index: 0});
 
     const [av_dates, setAv_dates] = React.useState<IAv_Date[]>([])
+    const [isError, setIsError] = React.useState<errorMessageType>({isVisible: false, message: '', onOkay: ()=>{}})
 
 
 
@@ -137,6 +140,7 @@ const AddTimeSlotScreen = ({ userState, navigation, examState, route }: any) => 
         } catch (error: any) {
             console.log(error.response?.data?.message);
             setLoading(false);
+            setIsError({isVisible: true, message: 'Adding TimeSlot failed', onOkay: ()=> {setIsError({...error, isVisible: false})}})
 
         }
     }
@@ -147,15 +151,19 @@ const AddTimeSlotScreen = ({ userState, navigation, examState, route }: any) => 
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={styles.container}
         >
-            <Header
-                // leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
-                centerComponent={{ text: 'Add Time Slot', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
-                // rightComponent={{ icon: 'home', color: '#fff' }}
-                backgroundColor={colors.main_color}
+            <ToolBarHeader
+                title={"Add Time Slot"} 
+                // setUsers={setUsers} 
+                // setToken={setToken}
+                navigation={navigation}
+                isLogoutAv={false}
+                isBackAv={true}
             />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <ScrollView>
                     <View style={styles.inner}>
+                    {(isError.isVisible && !loading) && 
+                    <ErrorAnimation errorMsg={isError}/>}
                         {loading && <Overlay isVisible={loading} overlayStyle={{ backgroundColor: colors.secondary_color }}>
                             <LoadingAnimation />
                         </Overlay>}

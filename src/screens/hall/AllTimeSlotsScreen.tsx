@@ -16,12 +16,16 @@ import { deleteHall, loadHalls } from '../../services/hall/hall.service';
 import { OneHallComponent } from '../../components/onehall.component';
 import { ITimeSlot } from '../../services/hall/hall.interface';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
+import { userRoleTypes } from '../../services/user/user.interface';
+import { ErrorAnimation, errorMessageType } from '../../components/error.component';
+import { ToolBarHeader } from '../../components/Header.component';
 
 const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) => {
     const [loading, setloading] = React.useState(false);
     const [examId, setExamId] = React.useState(route?.params.id);
     const [exam, setExam] = React.useState('');
     const [timeSlots, settimeSlots] = React.useState([]);
+    const [isError, setIsError] = React.useState<errorMessageType>({isVisible: false, message: '', onOkay: ()=>{}})
 
     useEffect(() => {
         const data = examState.exams.find((res: IExam) => res.id === route?.params.id)
@@ -41,6 +45,7 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
         } catch (error: any) {
             console.log(error.response.data);
             setloading(false);
+            setIsError({isVisible: true, message: 'Loading TimeSlot failed', onOkay: ()=> {setIsError({...error, isVisible: false})}})
         }
     }
     const onDeleteSubject = async (id: number) => {
@@ -55,19 +60,24 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
         } catch (error: any) {
             console.log(error.response.data);
             setloading(false);
+            setIsError({isVisible: true, message: 'Delete TimeSlot failed', onOkay: ()=> {setIsError({...error, isVisible: false})}})
         }
     }
 
     return (
 
-        <View style={{height: '100%', backgroundColor: colors.secondary_color}}>
-            <Header
-                // leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
-                centerComponent={{ text: 'All Time slots', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
-                // rightComponent={{ icon: 'home', color: '#fff' }}
-                backgroundColor={colors.main_color}
+        <View style={{ height: '100%', backgroundColor: colors.secondary_color }}>
+            <ToolBarHeader
+                title={"All Time Slots"} 
+                // setUsers={setUsers} 
+                // setToken={setToken}
+                navigation={navigation}
+                isLogoutAv={false}
+                isBackAv={true}
             />
             <View style={styles.inners}>
+                {(isError.isVisible && !loading) && 
+                    <ErrorAnimation errorMsg={isError}/>}
                 {loading && <Overlay isVisible={loading} overlayStyle={{ backgroundColor: colors.secondary_color }}>
                     <LoadingAnimation width={100} height={100} />
                 </Overlay>}
@@ -78,32 +88,33 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
                     </View> */}
                 </View>
                 {/* <ScrollView> */}
-                    {timeSlots && timeSlots.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, marginTop: '1%' }}>
-                        {
-                            (timeSlots).map((_timeSlot: ITimeSlot, index: number) => (
-                                <OneHallComponent
-                                    key={index}
-                                    hall={_timeSlot}
-                                    onDelete={() => { onDeleteSubject(1) }}
-                                    onEdit={() => { navigation.navigate('UpdateTimeSlot', {timeSlot: _timeSlot, examId }) }}
-                                />)
-                            )
-                        }
-                    </ScrollView>}
+                {timeSlots && timeSlots.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, marginTop: '1%' }}>
+                    {
+                        (timeSlots).map((_timeSlot: ITimeSlot, index: number) => (
+                            <OneHallComponent
+                                key={index}
+                                hall={_timeSlot}
+                                onDelete={() => { onDeleteSubject(1) }}
+                                onEdit={() => { navigation.navigate('UpdateTimeSlot', { timeSlot: _timeSlot, examId }) }}
+                                admin={userRoleTypes.admin === userState.user.role ? true : false}
+                            />)
+                        )
+                    }
+                </ScrollView>}
                 {/* </ScrollView> */}
-                {timeSlots.length <= 0 && !loading && <View style={{ justifyContent: 'center' }}>
+                {timeSlots.length <= 0 && !loading && <View style={{ justifyContent: 'center', flexGrow: 1 }}>
                     <EmptyAnimation message={"timeSlots not found"} />
                 </View>}
             </View>
-            <View style={{ position: 'absolute', flexDirection: 'column', justifyContent: 'flex-end', right: 10, height: '100%', bottom: 10 }}>
+            {userState?.user?.role === userRoleTypes.admin && <View style={{ position: 'absolute', flexDirection: 'column', justifyContent: 'flex-end', right: 10, height: '100%', bottom: 10 }}>
                 <Button
-                    onPress={() => { navigation.navigate('AddTimeSlots', examId)}}
+                    onPress={() => { navigation.navigate('AddTimeSlots', examId) }}
                     buttonStyle={{ backgroundColor: colors.main_color, width: 50, height: 50, borderRadius: 50 }}
                     icon={
-                        <Icon name="plus" type="font-awesome-5" style={{ alignSelf: 'flex-end' }} color={colors.secondary_color} size={20}></Icon>
+                        <Icon name="plus" type="font-awesome-5" style={{ alignSelf: 'flex-end' }} color={colors.secondary_color} size={14}></Icon>
                     }
                 />
-            </View>
+            </View>}
         </View>
 
     );
@@ -117,7 +128,7 @@ const styles = StyleSheet.create({
     inners: {
         // paddingTop: '20%',
         // padding: 24,
-        // flex: 1,
+        flexGrow: 1,
         backgroundColor: colors.secondary_color,
         // justifyContent: "center"
         // height: "90%",

@@ -9,7 +9,7 @@
  */
 
 import * as React from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Provider } from 'react-redux'
@@ -31,19 +31,48 @@ import EditTimeSlotScreen from './src/screens/hall/EditTimeSlotScreen';
 import TimeTableScreen from './src/screens/timtable/TimeTableScreen';
 import { linking } from './src/config/linking';
 import { TabNavigator } from './src/navigator/tabnavigator';
+import messaging from '@react-native-firebase/messaging';
 
-function DetailsScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Details Screen</Text>
-      <Button title="Go back" onPress={() => navigation.goBack()} />
-    </View>
-  );
-}
 
 const Stack = createStackNavigator();
 export const store = createStore(reducers);
 function App() {
+
+  React.useEffect(() => {
+    // messaging()
+    // .getToken()
+    // .then(token => {
+    //   console.log(token);
+    // });
+
+    const unsubscribe = messaging().onMessage(async (remoteMessage: any) => {
+      // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      console.log(remoteMessage);
+    });
+    messaging().onNotificationOpenedApp((remoteMessage: any) => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+      navigation.navigate(remoteMessage.data.type);
+    });
+
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification,
+          );
+          // setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
+        }
+        // setLoading(false);
+      });
+
+    return unsubscribe;
+  }, []);
 
   return (
     <Provider store={store}>
@@ -75,7 +104,6 @@ function App() {
           {/* Tab page */}
           <Stack.Screen name="Tab" component={TabNavigator} />
 
-          <Stack.Screen name="Details" component={DetailsScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

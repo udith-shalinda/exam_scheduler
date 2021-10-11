@@ -15,9 +15,16 @@ import { deleteExam, loadExams } from '../../services/exam/exam.service';
 import { A_deleteExam, A_setExams } from '../../redux/exam/exam.action';
 import { EmptyAnimation } from '../../components/empty.component';
 import { LoadingAnimation } from '../../components/loading.component';
+import { Button } from 'react-native-elements/dist/buttons/Button';
+import { Icon } from 'react-native-elements/dist/icons/Icon';
+import { userRoleTypes } from '../../services/user/user.interface';
+import { ErrorAnimation, errorMessageType } from '../../components/error.component';
+import { storeToken } from '../../services/commen/asyncStorage.service';
+import { ToolBarHeader } from '../../components/Header.component';
 
-const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteExam}: any) => {
+const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteExam, setUsers, setToken }: any) => {
     const [loading, setloading] = React.useState(false);
+    const [isError, setIsError] = React.useState<errorMessageType>({isVisible: false, message: '', onOkay: ()=>{}})
 
     useEffect(() => {
         getAllExams();
@@ -34,6 +41,7 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
         } catch (error: any) {
             console.log(error.response.data);
             setloading(false);
+            setIsError({isVisible: true, message: 'Loading Exam failed', onOkay: ()=> {setIsError({...error, isVisible: false})}})
         }
     }
     const onDeleteExam = async (id: number) => {
@@ -47,58 +55,77 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
         } catch (error: any) {
             console.log(error.response.data);
             setloading(false);
+            setIsError({isVisible: true, message: 'Delete Exam failed', onOkay: ()=> {setIsError({...error, isVisible: false})}})
         }
+    }
+    const logOut = () => {
+        setToken(null);
+        setUsers(null);
+        storeToken('');
+        navigation.navigate('AllExams');
     }
 
     return (
 
-        <View>
-            <Header
-                // leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
-                centerComponent={{ text: 'All Exams', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
-                // rightComponent={{ icon: 'home', color: '#fff' }}
-                backgroundColor={colors.main_color}
+        <View style={{ height: '100%' }}>
+            <ToolBarHeader
+                title={"All Exams"} 
+                setUsers={setUsers} 
+                setToken={setToken}
+                navigation={navigation}
+                isLogoutAv={true}
+                isBackAv={false}
             />
             <View style={styles.inner}>
-                {loading && <Overlay isVisible={loading} overlayStyle={{backgroundColor: colors.secondary_color}}>
+            {(isError.isVisible && !loading) && 
+                    <ErrorAnimation errorMsg={isError}/>}
+                {loading && <Overlay isVisible={loading} overlayStyle={{ backgroundColor: colors.secondary_color }}>
                     <LoadingAnimation width={100} height={100} />
                 </Overlay>}
-                {examState.exams && examState.exams.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, minHeight: '100%', marginTop: '10%' }}>
+                {examState.exams && examState.exams.length > 0 &&
+                <View style={{ backgroundColor: colors.secondary_color, marginTop: '10%', flexGrow: 1, height: '10%' }}> 
+                    <ScrollView >
                     {
-                        
+
                         (examState.exams).map((exam: IExam) => (
-                            <OneExamComponent 
+                            <OneExamComponent
                                 key={exam.id}
-                                exam={exam} 
-                                onDelete={()=>{onDeleteExam(exam.id)}}
-                                onEdit={()=> {navigation.navigate('UpdateExam', exam.id)}}    
-                                onClick={()=> {navigation.navigate('Tab',{ screen:  "TimeTable", params: { id: exam.id}}, exam.id)}}
+                                exam={exam}
+                                onDelete={() => { onDeleteExam(exam.id) }}
+                                onEdit={() => { navigation.navigate('UpdateExam', exam.id) }}
+                                onClick={() => { navigation.navigate('Tab', { screen: "TimeTable", params: { id: exam.id } }, exam.id) }}
+                                admin={userRoleTypes.admin === userState?.user?.role ? true: false}
                             />)
                         )
                     }
-                </ScrollView>}
-                {examState?.exams.length <= 0 && !loading && <View style={{ justifyContent: 'center', height: '100%', }}>
+                    </ScrollView>
+                </View>
+                }
+                {examState?.exams.length <= 0 && !loading && <View style={{ justifyContent: 'center', flexGrow: 1 }}>
                     <EmptyAnimation message={"Examinations not found"} />
 
                 </View>}
+                {userState?.user?.role === userRoleTypes.admin && <View style={{ position: 'absolute', right: 10, bottom: 10 }}>
+                    <Button
+                        onPress={() => { navigation.navigate('AddExam') }}
+                        buttonStyle={{ backgroundColor: colors.main_color, width: 50, height: 50, borderRadius: 50 }}
+                        icon={
+                            <Icon name="plus" type="font-awesome-5" style={{ alignSelf: 'flex-end' }} color={colors.secondary_color} size={14}></Icon>
+                        }
+                    />
+                </View>}
             </View>
         </View>
-
     );
 }
 
 
 const styles = StyleSheet.create({
-    container: {
-        // flex: 1
-    },
     inner: {
         // paddingTop: '20%',
         // padding: 24,
-        // flex: 1,
+        flexGrow: 1,
         backgroundColor: colors.secondary_color,
-        // justifyContent: "center"
-        // minHeight: "100%",
     },
 });
 
@@ -113,6 +140,13 @@ const mapDispatchToProps = (dispatch: any) => ({
     },
     a_deleteExam: (id: number) => {
         dispatch(A_deleteExam(id));
+    },
+    setUsers: (user: IUser) => {
+        dispatch(setUser(user));
+
+    },
+    setToken: (token: string) => {
+        dispatch(setUserToken(token));
     }
 })
 

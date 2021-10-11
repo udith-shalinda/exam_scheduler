@@ -2,6 +2,7 @@
     "colors": {
         "main_color": "#1BB55C",
         "secondary_color": "#E7F8EE",
+        "dark_main_color": "#127e40",
         "error_msg": "#A91E1E",
         "card_background": "#daf0e3"
     }

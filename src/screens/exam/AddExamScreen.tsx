@@ -12,11 +12,16 @@ import { addExam } from '../../services/exam/exam.service';
 import { IExam } from '../../services/exam/exam.interface';
 import { A_addExam } from '../../redux/exam/exam.action';
 import { LoadingAnimation } from '../../components/loading.component';
+import { ErrorAnimation, errorMessageType } from '../../components/error.component';
+import { Icon } from 'react-native-elements/dist/icons/Icon';
+import { ToolBarHeader } from '../../components/Header.component';
+import { IUser, setUser, setUserToken } from '../../redux/user/user.action';
 
-const AddExamScreen = ({ userState, navigation, a_addExam }: any) => {
+const AddExamScreen = ({ userState, navigation, a_addExam, setUsers, setToken }: any) => {
     const [exam, onChangeExam] = React.useState("");
     const [examError, setExamError] = React.useState('');
     const [loading, setLoading] = React.useState(false);
+    const [isError, setIsError] = React.useState<errorMessageType>({isVisible: false, message: '', onOkay: ()=>{}})
 
     React.useEffect(() => {
         if(!userState.token){
@@ -42,6 +47,7 @@ const AddExamScreen = ({ userState, navigation, a_addExam }: any) => {
                     }
                 }
                 setLoading(false);
+                setIsError({isVisible: true, message: 'Adding Exam failed', onOkay: ()=> {setIsError({...error, isVisible: false})}})
 
             }
         }else{
@@ -55,14 +61,18 @@ const AddExamScreen = ({ userState, navigation, a_addExam }: any) => {
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={styles.container}
         >
-            <Header
-                // leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
-                centerComponent={{ text: 'Add Exam', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
-                // rightComponent={{ icon: 'home', color: '#fff' }}
-                backgroundColor={colors.main_color}
+            <ToolBarHeader
+                title={"Add Exam"} 
+                setUsers={setUsers} 
+                setToken={setToken}
+                navigation={navigation}
+                isLogoutAv={true}
+                isBackAv={true}
             />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.inner}>
+                {(isError.isVisible && !loading) && 
+                    <ErrorAnimation errorMsg={isError}/>}
                     {loading && <Overlay isVisible={loading} overlayStyle={{backgroundColor: colors.secondary_color}}>
                         <LoadingAnimation />
                     </Overlay>}
@@ -143,6 +153,13 @@ const mapStateToProps = (state: any) => ({
 const mapDispatchToProps = (dispatch: any) => ({
     a_addExam: (exam: IExam) => {
         dispatch(A_addExam(exam));
+    },
+    setUsers: (user: IUser) => {
+        dispatch(setUser(user));
+
+    },
+    setToken: (token: string) => {
+        dispatch(setUserToken(token));
     }
 })
 

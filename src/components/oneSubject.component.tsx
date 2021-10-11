@@ -4,7 +4,7 @@ import { Icon, Text } from "react-native-elements";
 import { colors } from './../utils/theam.json';
 
 
-export const OneSubjectComponent = ({ subject, onEdit, onDelete }: any) => {
+export const OneSubjectComponent = ({ subject, onEdit, onDelete, admin }: any) => {
     
     return (
         <View style={styles.card}>
@@ -15,10 +15,10 @@ export const OneSubjectComponent = ({ subject, onEdit, onDelete }: any) => {
                     <Text style={{ fontSize: 14, color: colors.main_color, paddingLeft: '45%'}}>Students: {subject.stu_count}</Text>
                     <Text style={{ fontSize: 14, color: colors.main_color, paddingLeft: '55%'}}>Time: {subject.time}</Text>
                 </View>
-                <View>
+                {admin && <View>
                     <Icon name='edit' onPress={onEdit}></Icon>
                     <Icon name='delete' color={colors.error_msg} onPress={onDelete}></Icon>
-                </View>
+                </View>}
             </View>
             {/* </Card> */}
         </View>

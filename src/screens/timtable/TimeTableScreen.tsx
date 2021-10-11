@@ -17,6 +17,9 @@ import { IExam } from '../../services/exam/exam.interface';
 import { loadHalls } from '../../services/hall/hall.service';
 import { generateTimeTableFromData, getAllTimeTableByExam } from '../../services/timetable/TimeTable.service';
 import { OneTimeTableComponent } from '../../components/oneTimeTable.component';
+import { userRoleTypes } from '../../services/user/user.interface';
+import { errorMessageType } from '../../components/error.component';
+import { ToolBarHeader } from '../../components/Header.component';
 
 const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
     const [loading, setloading] = React.useState(false);
@@ -27,6 +30,7 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
     const [subjects, setSubjects] = React.useState<ISubject[]>([]);
     const [timeSlots, settimeSlots] = React.useState([]);
     const [timeTableGenerated, settimeTableGenerated] = React.useState(true)
+    const [isError, setIsError] = React.useState<errorMessageType>({isVisible: false, message: '', onOkay: ()=>{}})
 
 
 
@@ -97,11 +101,13 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
     return (
 
         <View style={{ height: '100%' }}>
-            <Header
-                // leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
-                centerComponent={{ text: 'Time Table', style: { color: '#fff', fontSize: 23, textAlign: 'left' } }}
-                // rightComponent={{ icon: 'home', color: '#fff' }}
-                backgroundColor={colors.main_color}
+            <ToolBarHeader
+                title={"Time Table"} 
+                // setUsers={setUsers} 
+                // setToken={setToken}
+                navigation={navigation}
+                isLogoutAv={false}
+                isBackAv={true}
             />
             <View style={styles.inner}>
                 {loading && <Overlay isVisible={loading} overlayStyle={{ backgroundColor: colors.secondary_color }}>
@@ -110,7 +116,7 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
                 {exam.length > 0 && <Text style={{ fontSize: 22, fontWeight: 'bold', color: colors.main_color, marginLeft: 25, marginTop: 20 }}> {'Exam: ' + exam}</Text>}
                 <View style={{ flexDirection: 'row', alignSelf: 'flex-end' }}>
                     <View>
-                        {!timeTableGenerated && <Button buttonStyle={styles.btnContainer} title="Genarate Time Table" onPress={() => { generateTimeTable() }} />}
+                        {!timeTableGenerated && userState?.user?.role === userRoleTypes.admin && <Button buttonStyle={styles.btnContainer} title="Genarate Time Table" onPress={() => { generateTimeTable() }} />}
                     </View>
                     {/* <View >
                         <Button buttonStyle={styles.btnContainer} title="All Subjects" onPress={() => { navigation.navigate('AllSubjects', examId) }} />
@@ -126,7 +132,7 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
                         )
                     }
                 </ScrollView>}
-                {timeTable.length <= 0 && !loading && <View style={{ justifyContent: 'center' }}>
+                {timeTable.length <= 0 && !loading && <View style={{ justifyContent: 'center', flexGrow: 1}}>
                     <EmptyAnimation message={"Time table not found"} />
                 </View>}
             </View>
@@ -144,9 +150,10 @@ const styles = StyleSheet.create({
         // paddingTop: '20%',
         // padding: 24,
         // flex: 1,
+        flexGrow: 1,
         backgroundColor: colors.secondary_color,
         // justifyContent: "center"
-        minHeight: "100%",
+        // minHeight: "100%",
     },
     btnContainer: {
         backgroundColor: colors.main_color,
