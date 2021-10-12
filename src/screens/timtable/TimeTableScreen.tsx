@@ -15,11 +15,12 @@ import { ISubject } from '../../services/subject/subject.interface';
 import { OneSubjectComponent } from '../../components/oneSubject.component';
 import { IExam } from '../../services/exam/exam.interface';
 import { loadHalls } from '../../services/hall/hall.service';
-import { generateTimeTableFromData, getAllTimeTableByExam } from '../../services/timetable/TimeTable.service';
+import { addTimeTable, generateTimeTableFromData, getAllTimeTableByExam } from '../../services/timetable/TimeTable.service';
 import { OneTimeTableComponent } from '../../components/oneTimeTable.component';
 import { userRoleTypes } from '../../services/user/user.interface';
 import { errorMessageType } from '../../components/error.component';
 import { ToolBarHeader } from '../../components/Header.component';
+import { ITimeTable } from '../../services/timetable/TimeTable.interface';
 
 const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
     const [loading, setloading] = React.useState(false);
@@ -32,49 +33,57 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
     const [timeTableGenerated, settimeTableGenerated] = React.useState(true)
     const [isError, setIsError] = React.useState<errorMessageType>({isVisible: false, message: '', onOkay: ()=>{}})
 
-
-
     useEffect(() => {
         const data = examState.exams.find((res: IExam) => res.id === route?.params.id)
         setExam(data.name);
-        getTimeTable();
-        if (timeTable.length === 0 && subjects.length === 0 && timeSlots.length === 0) {
+        if (timeTable.length === 0 || subjects.length === 0 || timeSlots.length === 0) {
             settimeTableGenerated(false);
-        } else {
-            settimeTableGenerated(true);
         }
+        const unsubscribe = navigation.addListener('focus', () => {
+            getTimeTable();
+          });
+          return unsubscribe;
     }, [])
 
-    useEffect(() => {
-        if(subjects.length > 0 && timeSlots.length > 0 ){
-            generateTimeTableFromData(subjects, timeSlots);
-        }
-    }, [subjects, timeSlots])
+    // useEffect(() => {
+    //     if(subjects.length > 0 && timeSlots.length > 0 ){
+    //         generateTimeTableFromData(subjects, timeSlots);
+    //     }
+    // }, [subjects, timeSlots])
 
     const generateTimeTable = async () => {
-        if (subjects.length === 0 && timeSlots.length === 0) {
-            getAllSubjects();
-            getAllTimeSlots();
+        setloading(true);
+        if (subjects.length === 0 || timeSlots.length === 0) {
+            await getAllSubjects();
+            await getAllTimeSlots();
         }
-    }
-    const setTimeTableFromData = () => {
-        // TODO generate time table
-
+        const data: any = await generateTimeTableFromData(subjects, timeSlots);
+        console.log(data);
+        const newTimeTable = await addTimeTable(data, userState.token); 
+        console.log('newTimeTable', newTimeTable.data.data);
+        settimeTable(newTimeTable.data.data);
+        if(data.data.data.length > 0){
+            settimeTableGenerated(true);
+        }
+        setloading(false);
     }
 
     const getTimeTable = async () => {
         setloading(true);
         const data = await getAllTimeTableByExam(examId, userState.token);
         settimeTable(data.data.data);
-        settimeTableGenerated(true);
+        if(data.data.data.length > 0){
+            settimeTableGenerated(true);
+        }
         setloading(false);
     }
     const getAllTimeSlots = async () => {
-        setloading(true);
+        // setloading(true);
         try {
             const data = await loadHalls(examId, userState.token);
             // console.log(data.data.data[0]);
             if (data.data.data) {
+                console.log(data.data.data);
                 settimeSlots(data.data.data);                
             }
             setloading(false);
@@ -84,11 +93,12 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
         }
     }
     const getAllSubjects = async () => {
-        setloading(true);
+        // setloading(true);
         try {
             const data = await loadSubjects(examId, userState.token);
             // console.log(data.data.data);
             if (data.data.data) {
+                console.log(data.data.data);
                 setSubjects(data.data.data);
             }
             setloading(false);
@@ -122,7 +132,7 @@ const TimeTableScreen = ({ navigation, userState, route, examState }: any) => {
                         <Button buttonStyle={styles.btnContainer} title="All Subjects" onPress={() => { navigation.navigate('AllSubjects', examId) }} />
                     </View> */}
                 </View>
-                {timeTable && timeTable.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, minHeight: '90%', marginTop: '1%' }}>
+                {timeTable && timeTable.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, height: '60%', marginTop: '1%' }}>
                     {
                         (timeTable).map((_time: ISubject) => (
                             <OneTimeTableComponent

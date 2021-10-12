@@ -30,7 +30,10 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
     useEffect(() => {
         const data = examState.exams.find((res: IExam) => res.id === route?.params.id)
         setExam(data.name);
-        getAllTimeSlots();
+        const unsubscribe = navigation.addListener('focus', () => {
+            getAllTimeSlots();
+          });
+          return unsubscribe;
     }, [])
 
     const getAllTimeSlots = async () => {
@@ -50,11 +53,12 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
     }
     const onDeleteSubject = async (id: number) => {
         try {
+            setloading(true);
             const data = await deleteHall(id, userState.token);
             // console.log(data.data.data[0]);
             if (data.data.data) {
                 // a_deleteSubject(id);
-                settimeSlots(timeSlots.filter((sub: ISubject) => sub.id !== id));
+                settimeSlots(timeSlots.filter((time: ITimeSlot) => time.hall_id !== id));
             }
             setloading(false);
         } catch (error: any) {
@@ -82,26 +86,20 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
                     <LoadingAnimation width={100} height={100} />
                 </Overlay>}
                 {exam.length > 0 && <Text style={{ fontSize: 22, fontWeight: 'bold', color: colors.main_color, marginLeft: 25, marginTop: 20 }}> {'Exam: ' + exam}</Text>}
-                <View style={{ flexDirection: 'row', alignSelf: 'flex-end' }}>
-                    {/* <View>
-                        <Button title="Add Time Slot" onPress={() => { navigation.navigate('AddTimeSlots', examId) }} buttonStyle={styles.btnContainer}/>
-                    </View> */}
-                </View>
-                {/* <ScrollView> */}
-                {timeSlots && timeSlots.length > 0 && <ScrollView style={{ backgroundColor: colors.secondary_color, marginTop: '1%' }}>
+                {timeSlots && timeSlots.length > 0 && 
+                <ScrollView style={{ backgroundColor: colors.secondary_color, marginTop: '1%', height: '60%' }}>
                     {
                         (timeSlots).map((_timeSlot: ITimeSlot, index: number) => (
                             <OneHallComponent
                                 key={index}
                                 hall={_timeSlot}
-                                onDelete={() => { onDeleteSubject(1) }}
+                                onDelete={() => { onDeleteSubject(_timeSlot.hall_id) }}
                                 onEdit={() => { navigation.navigate('UpdateTimeSlot', { timeSlot: _timeSlot, examId }) }}
                                 admin={userRoleTypes.admin === userState.user.role ? true : false}
                             />)
                         )
                     }
                 </ScrollView>}
-                {/* </ScrollView> */}
                 {timeSlots.length <= 0 && !loading && <View style={{ justifyContent: 'center', flexGrow: 1 }}>
                     <EmptyAnimation message={"timeSlots not found"} />
                 </View>}

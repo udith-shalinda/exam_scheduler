@@ -104,6 +104,8 @@ const AddTimeSlotScreen = ({ userState, navigation, examState, route }: any) => 
                 return av_date;
             })
         )
+        console.log(av_dates);
+        
     }
     const deleteAv_time = (dateId: number, timeId: number) => {
         setAv_dates(av_dates.map((av_date: IAv_Date, dIndex) => {
@@ -134,9 +136,12 @@ const AddTimeSlotScreen = ({ userState, navigation, examState, route }: any) => 
 
         setLoading(true);
         try {
-            const data = await addHall(timeSlot, userState.token);
+            console.log({...timeSlot, all_Av_Dates: av_dates});
+            
+            const data = await addHall({...timeSlot, all_Av_Dates: av_dates}, userState.token);
             console.log(data.data.data);
             setLoading(false);
+            navigation.navigate('TimeSlots', {id: timeSlot.examId});
         } catch (error: any) {
             console.log(error.response?.data?.message);
             setLoading(false);

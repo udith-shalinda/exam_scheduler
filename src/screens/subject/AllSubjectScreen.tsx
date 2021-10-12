@@ -33,6 +33,10 @@ const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
         const data = examState.exams.find((res: IExam) => res.id === route?.params.id)
         setExam(data.name);
         getAllSubjects();
+        const unsubscribe = navigation.addListener('focus', () => {
+            getAllSubjects();
+          });
+          return unsubscribe;
     }, [])
 
     const getAllSubjects = async () => {
@@ -52,6 +56,7 @@ const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
     }
     const onDeleteSubject = async (id: number) => {
         try {
+            setloading(true);
             const data = await deleteSubject(id, userState.token);
             // console.log(data.data.data);
             if (data.data.data) {
