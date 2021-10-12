@@ -8,7 +8,7 @@ export const generateTimeTableFromData = (
   allSubjects: ISubject[],
   allTimeSlots: ITimeSlot[],
 ) => {
-  console.log(allTimeSlots);
+  console.log(allTimeSlots, allSubjects);
   
   const timeTable: ITimeTable[] = [];
   const daysBetweenExams = 1;
@@ -113,7 +113,7 @@ export const generateTimeTableFromData = (
       }
     });
   });
-  console.log(allSubjects);
+  // console.log(allSubjects);
   return allSubjects;
 };
 

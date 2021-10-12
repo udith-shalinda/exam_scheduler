@@ -74,7 +74,7 @@ const AddSubjectScreen = ({ userState, navigation, examState, route }: any) => {
             const data = await addSubject(subject, userState.token);
             setLoading(false);
 
-            navigation.navigate('Subjects', {id: subject.examId});
+            navigation.navigate('Subjects', {id: subject.examId, newSub: data.data.data});
 
         } catch (error: any) {
             console.log(error.response?.data?.message);

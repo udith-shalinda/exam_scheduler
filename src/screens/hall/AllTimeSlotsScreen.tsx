@@ -30,7 +30,10 @@ const AllTimeSlotsScreen = ({ navigation, userState, route, examState }: any) =>
     useEffect(() => {
         const data = examState.exams.find((res: IExam) => res.id === route?.params.id)
         setExam(data.name);
-        getAllTimeSlots();
+        const unsubscribe = navigation.addListener('focus', () => {
+            getAllTimeSlots();
+          });
+          return unsubscribe;
     }, [])
 
     const getAllTimeSlots = async () => {
