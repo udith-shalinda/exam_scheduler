@@ -15,7 +15,7 @@ import { IAv_Date, IAv_Time, IHall } from '../../services/hall/hall.interface';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SelectDateComponent } from '../../components/selectDate.component';
 import { SelectTimeComponent } from '../../components/selectTime.component';
-import { addHall } from '../../services/hall/hall.service';
+import { addHall, updateHall } from '../../services/hall/hall.service';
 import { ErrorAnimation, errorMessageType } from '../../components/error.component';
 import { ToolBarHeader } from '../../components/Header.component';
 
@@ -135,9 +135,10 @@ const EditTimeSlotScreen = ({ userState, navigation, examState, route }: any) =>
 
         setLoading(true);
         try {
-            const data = await addHall(timeSlot, userState.token);
+            const data = await updateHall(timeSlot, userState.token);
             console.log(data.data.data);
             setLoading(false);
+            navigation.navigate('TimeSlots', {id: timeSlot.examId});
         } catch (error: any) {
             console.log(error.response?.data?.message);
             setLoading(false);

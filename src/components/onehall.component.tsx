@@ -6,6 +6,7 @@ import { colors } from './../utils/theam.json';
 
 
 export const OneHallComponent = ({ hall, onEdit, onDelete, admin }: any) => {
+    console.log(hall);
     
     return (
         <View style={styles.card}>

@@ -87,9 +87,9 @@ const AllExamScreen = ({ navigation, examState, userState, a_setExams, a_deleteE
                     <ScrollView >
                     {
 
-                        (examState.exams).map((exam: IExam) => (
+                        (examState.exams).map((exam: IExam, index: number) => (
                             <OneExamComponent
-                                key={exam.id}
+                                key={index}
                                 exam={exam}
                                 onDelete={() => { onDeleteExam(exam.id) }}
                                 onEdit={() => { navigation.navigate('UpdateExam', exam.id) }}

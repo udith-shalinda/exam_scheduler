@@ -52,6 +52,7 @@ const AllSubjecScreen = ({ navigation, userState, route, examState }: any) => {
     }
     const onDeleteSubject = async (id: number) => {
         try {
+            setloading(true);
             const data = await deleteSubject(id, userState.token);
             // console.log(data.data.data);
             if (data.data.data) {
